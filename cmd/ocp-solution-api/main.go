@@ -1,4 +1,4 @@
-// Package main is an entry point for module
+// TODO add ocp-solution-api executable description
 package main
 
 import (
