@@ -61,9 +61,7 @@ func FilterSolutions(original []Solution, filterOut map[Solution]struct{}) []Sol
 
 	filtered := make([]Solution, 0, cap(original))
 	for _, value := range original {
-		if _, found := filterOut[value]; found {
-			continue
-		} else {
+		if _, found := filterOut[value]; !found {
 			filtered = append(filtered, value)
 		}
 	}
