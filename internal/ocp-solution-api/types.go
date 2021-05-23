@@ -10,16 +10,16 @@ const (
 )
 
 type Solution struct {
-	id        uint64
-	code      string
-	language  LanguageType
-	timestamp int64
+	Id        uint64
+	Source    string
+	Language  LanguageType
+	Timestamp int64
 }
 
-type Status uint8
+type VerdictStatus uint8
 
 const (
-	Passed Status = iota
+	Passed VerdictStatus = iota
 	Failed
 	SyntaxError
 	CompilationError
@@ -27,7 +27,7 @@ const (
 )
 
 type Verdict struct {
-	solutionId uint64
-	status     Status
-	timestamp  int64
+	SolutionId uint64
+	Status     VerdictStatus
+	Timestamp  int64
 }
