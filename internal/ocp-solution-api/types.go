@@ -4,26 +4,29 @@ package ocp_solution_api
 type LanguageType uint8
 
 const (
-	Go LanguageType = iota
+	Unknown LanguageType = iota
+	Go
 	Cpp
 	Python
 )
 
 type Solution struct {
-	Id        uint64
-	Source    string
-	Language  LanguageType
-	Timestamp int64
+	UserId     uint64
+	SolutionId uint64
+	Language   LanguageType
+	Timestamp  int64
+	SourceCode string
 }
 
 type VerdictStatus uint8
 
 const (
-	Passed VerdictStatus = iota
+	InProgress VerdictStatus = iota
+	Passed
 	Failed
 	SyntaxError
 	CompilationError
-	InProgress
+	Dropped
 )
 
 type Verdict struct {
