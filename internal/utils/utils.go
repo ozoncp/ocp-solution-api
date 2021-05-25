@@ -4,11 +4,12 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"github.com/ozoncp/ocp-solution-api/internal/ocp-solution-api"
+	"github.com/ozoncp/ocp-solution-api/internal/solution"
+	"github.com/ozoncp/ocp-solution-api/internal/verdict"
 )
 
-type Solution ocp_solution_api.Solution
-type Verdict ocp_solution_api.Verdict
+type Solution = solution.Solution
+type Verdict = verdict.Verdict
 
 // SplitSolutionsToBatches function splits slice of Solution into batches of predefined number of elements
 // TODO: add test
@@ -90,7 +91,7 @@ func ConvertSolutionsSliceToMap(original []Solution) map[uint64]Solution {
 
 	converted := make(map[uint64]Solution, len(original))
 	for _, value := range original {
-		converted[value.SolutionId] = value
+		converted[value.GetSolutionId()] = value
 	}
 	return converted
 }
@@ -104,7 +105,7 @@ func ConvertVerdictsSliceToMap(original []Verdict) map[uint64]Verdict {
 
 	converted := make(map[uint64]Verdict, len(original))
 	for _, value := range original {
-		converted[value.SolutionId] = value
+		converted[value.GetSolutionId()] = value
 	}
 	return converted
 }
