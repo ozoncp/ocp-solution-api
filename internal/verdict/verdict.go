@@ -24,8 +24,8 @@ type Verdict struct {
 }
 
 // New function is a convenient way to construct Verdict object
-func New(solutionId uint64) Verdict {
-	return Verdict{
+func New(solutionId uint64) *Verdict {
+	return &Verdict{
 		solutionId,
 		InProgress,
 		time.Now().Unix(),

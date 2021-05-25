@@ -22,8 +22,8 @@ type Solution struct {
 }
 
 // New function is a convenient way to construct Solution object
-func New(userId uint64, solutionId uint64, lang Language, sourceCode string) Solution {
-	return Solution{
+func New(userId uint64, solutionId uint64, lang Language, sourceCode string) *Solution {
+	return &Solution{
 		userId,
 		solutionId,
 		lang,
