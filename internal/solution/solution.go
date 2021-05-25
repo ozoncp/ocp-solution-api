@@ -16,9 +16,9 @@ const (
 type Solution struct {
 	userId     uint64
 	solutionId uint64
-	Language   Language
+	language   Language
 	timestamp  int64
-	SourceCode string
+	sourceCode string
 }
 
 // New function is a convenient way to construct Solution object
@@ -41,7 +41,7 @@ func (s Solution) String() (string, error) {
 	return string(out), nil
 }
 
-// UpdateTimestamp method helps to update Timestamp in a unified way
+// UpdateTimestamp method helps to update timestamp in a unified way
 func (s *Solution) UpdateTimestamp() {
 	s.timestamp = time.Now().Unix()
 }
@@ -56,9 +56,14 @@ func (s Solution) GetUserId() uint64 {
 	return s.userId
 }
 
-// SetSourceCode method helps to update SourceCode and Language
+// SetSourceCode method helps to update sourceCode and corresponding language and updates timestamp
 func (s *Solution) SetSourceCode(sourceCode string, lang Language) {
-	s.SourceCode = sourceCode
-	s.Language = lang
+	s.sourceCode = sourceCode
+	s.language = lang
 	s.UpdateTimestamp()
+}
+
+// GetSourceCode method helps to retrieve sourceCode and corresponding language
+func (s Solution) GetSourceCode() (string, Language) {
+	return s.sourceCode, s.language
 }
