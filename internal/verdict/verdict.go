@@ -18,18 +18,20 @@ const (
 
 type Verdict struct {
 	solutionId uint64
+	userId     uint64 // moderator's UserId
 	status     Status
 	timestamp  int64
 	comment    string
 }
 
 // New function is a convenient way to construct Verdict object
-func New(solutionId uint64) *Verdict {
+func New(solutionId uint64, userId uint64, status Status, comment string) *Verdict {
 	return &Verdict{
 		solutionId,
-		InProgress,
+		userId,
+		status,
 		time.Now().Unix(),
-		"",
+		comment,
 	}
 }
 
@@ -52,16 +54,17 @@ func (v *Verdict) UpdateTimestamp() {
 	v.timestamp = time.Now().Unix()
 }
 
-// SetStatus method sets status and corresponding comment and updates Verdict timestamp
-func (v *Verdict) SetStatus(status Status, comment string) {
+// UpdateStatus method sets status, corresponding comment, moderator's id and updates Verdict timestamp
+func (v *Verdict) UpdateStatus(status Status, comment string, userId uint64) {
 	v.status = status
 	v.comment = comment
+	v.userId = userId
 	v.UpdateTimestamp()
 }
 
-// GetStatus method helps to retrieve status and corresponding comment from Verdict
-func (v Verdict) GetStatus() (Status, string) {
-	return v.status, v.comment
+// GetStatus method helps to retrieve status, corresponding comment and moderator's id from Verdict
+func (v Verdict) GetStatus() (Status, string, uint64) {
+	return v.status, v.comment, v.userId
 }
 
 // GetSolutionId method helps to retrieve solutionId from Verdict

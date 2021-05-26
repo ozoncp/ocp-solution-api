@@ -20,7 +20,7 @@ func New(id uint64, issueId uint64) *Solution {
 	return &Solution{
 		id,
 		issueId,
-		verdict.New(id),
+		nil,
 	}
 }
 
