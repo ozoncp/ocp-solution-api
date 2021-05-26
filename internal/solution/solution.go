@@ -2,33 +2,25 @@ package solution
 
 import (
 	"encoding/json"
-	"time"
+	"github.com/ozoncp/ocp-solution-api/internal/verdict"
 )
 
-type Language uint8
-
-const (
-	Go Language = iota
-	Cpp
-	Python
-)
+type Verdict = verdict.Verdict
 
 type Solution struct {
-	userId     uint64
-	solutionId uint64
-	language   Language
-	timestamp  int64
-	sourceCode string
+	id      uint64
+	issueId uint64
+	verdict *Verdict
+	// TODO: integrate Snippet after 3rd lesson review
+	// TODO: integrate Check after 3rd lesson review
 }
 
 // New function is a convenient way to construct Solution object
-func New(userId uint64, solutionId uint64, lang Language, sourceCode string) *Solution {
+func New(id uint64, issueId uint64) *Solution {
 	return &Solution{
-		userId,
-		solutionId,
-		lang,
-		time.Now().Unix(),
-		sourceCode,
+		id,
+		issueId,
+		verdict.New(id),
 	}
 }
 
@@ -41,29 +33,17 @@ func (s Solution) String() (string, error) {
 	return string(out), nil
 }
 
-// UpdateTimestamp method helps to update timestamp in a unified way
-func (s *Solution) UpdateTimestamp() {
-	s.timestamp = time.Now().Unix()
+// GetId method helps to retrieve id from Solution
+func (s Solution) GetId() uint64 {
+	return s.id
 }
 
-// GetSolutionId method helps to retrieve solutionId from Solution
-func (s Solution) GetSolutionId() uint64 {
-	return s.solutionId
+// GetIssueId method helps to retrieve issueId from Solution
+func (s Solution) GetIssueId() uint64 {
+	return s.issueId
 }
 
-// GetUserId method helps to retrieve userId from Solution
-func (s Solution) GetUserId() uint64 {
-	return s.userId
-}
-
-// SetSourceCode method helps to update sourceCode and corresponding language and updates timestamp
-func (s *Solution) SetSourceCode(sourceCode string, lang Language) {
-	s.sourceCode = sourceCode
-	s.language = lang
-	s.UpdateTimestamp()
-}
-
-// GetSourceCode method helps to retrieve sourceCode and corresponding language
-func (s Solution) GetSourceCode() (string, Language) {
-	return s.sourceCode, s.language
+// GetVerdict method helps to retrieve verdict from Solution
+func (s Solution) GetVerdict() *Verdict {
+	return s.verdict
 }
