@@ -33,17 +33,17 @@ func (s Solution) String() (string, error) {
 	return string(out), nil
 }
 
-// GetId method helps to retrieve id from Solution
-func (s Solution) GetId() uint64 {
+// Id method helps to retrieve id from Solution
+func (s Solution) Id() uint64 {
 	return s.id
 }
 
-// GetIssueId method helps to retrieve issueId from Solution
-func (s Solution) GetIssueId() uint64 {
+// IssueId method helps to retrieve issueId from Solution
+func (s Solution) IssueId() uint64 {
 	return s.issueId
 }
 
-// GetVerdict method helps to retrieve verdict from Solution
-func (s Solution) GetVerdict() *Verdict {
+// Verdict method helps to retrieve verdict from Solution
+func (s Solution) Verdict() *Verdict {
 	return s.verdict
 }

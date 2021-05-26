@@ -62,12 +62,12 @@ func (v *Verdict) UpdateStatus(status Status, comment string, userId uint64) {
 	v.UpdateTimestamp()
 }
 
-// GetStatus method helps to retrieve status, corresponding comment and moderator's id from Verdict
-func (v Verdict) GetStatus() (Status, string, uint64) {
+// Status method helps to retrieve status, corresponding comment and moderator's id from Verdict
+func (v Verdict) Status() (Status, string, uint64) {
 	return v.status, v.comment, v.userId
 }
 
-// GetSolutionId method helps to retrieve solutionId from Verdict
-func (v Verdict) GetSolutionId() uint64 {
+// SolutionId method helps to retrieve solutionId from Verdict
+func (v Verdict) SolutionId() uint64 {
 	return v.solutionId
 }
