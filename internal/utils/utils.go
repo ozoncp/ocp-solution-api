@@ -91,7 +91,7 @@ func ConvertSolutionsSliceToMap(original []Solution) map[uint64]Solution {
 
 	converted := make(map[uint64]Solution, len(original))
 	for _, value := range original {
-		converted[value.GetSolutionId()] = value
+		converted[value.Id()] = value
 	}
 	return converted
 }
@@ -105,7 +105,7 @@ func ConvertVerdictsSliceToMap(original []Verdict) map[uint64]Verdict {
 
 	converted := make(map[uint64]Verdict, len(original))
 	for _, value := range original {
-		converted[value.GetSolutionId()] = value
+		converted[value.SolutionId()] = value
 	}
 	return converted
 }
