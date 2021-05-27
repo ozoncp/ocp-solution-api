@@ -51,11 +51,19 @@ func (v Verdict) InProgress() bool {
 
 // UpdateTimestamp method helps to update timestamp in a unified way
 func (v *Verdict) UpdateTimestamp() {
+	if v == nil {
+		return
+	}
+
 	v.timestamp = time.Now().Unix()
 }
 
 // UpdateStatus method sets status, corresponding comment, moderator's id and updates Verdict timestamp
 func (v *Verdict) UpdateStatus(status Status, comment string, userId uint64) {
+	if v == nil {
+		return
+	}
+
 	v.status = status
 	v.comment = comment
 	v.userId = userId
