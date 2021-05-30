@@ -12,7 +12,6 @@ type Solution = solution.Solution
 type Verdict = verdict.Verdict
 
 // SplitSolutionsToBatches function splits slice of Solution into batches of predefined number of elements
-// TODO: add test
 func SplitSolutionsToBatches(solutions []Solution, batchSize int) ([][]Solution, error) {
 	if solutions == nil {
 		return nil, nil
@@ -39,7 +38,6 @@ func SplitSolutionsToBatches(solutions []Solution, batchSize int) ([][]Solution,
 }
 
 // SplitVerdictsToBatches function splits slice of Verdict into batches of predefined number of elements
-// TODO: add test
 func SplitVerdictsToBatches(verdicts []Verdict, batchSize int) ([][]Verdict, error) {
 	if verdicts == nil {
 		return nil, nil
@@ -66,7 +64,6 @@ func SplitVerdictsToBatches(verdicts []Verdict, batchSize int) ([][]Verdict, err
 }
 
 // InvertSolutionsMap function inverts key->value map to value->key map
-// TODO: add test
 func InvertSolutionsMap(original map[uint64]Solution) (map[Solution]uint64, error) {
 	if original == nil {
 		return nil, nil
@@ -83,7 +80,6 @@ func InvertSolutionsMap(original map[uint64]Solution) (map[Solution]uint64, erro
 }
 
 // ConvertSolutionsSliceToMap function converts slice of Solution to map Solution.id->Solution
-// TODO: add test
 func ConvertSolutionsSliceToMap(original []Solution) map[uint64]Solution {
 	if original == nil {
 		return nil
@@ -97,7 +93,6 @@ func ConvertSolutionsSliceToMap(original []Solution) map[uint64]Solution {
 }
 
 // ConvertVerdictsSliceToMap function converts slice of Verdict to map Verdict.SolutionId->Verdict
-// TODO: add test
 func ConvertVerdictsSliceToMap(original []Verdict) map[uint64]Verdict {
 	if original == nil {
 		return nil
@@ -111,7 +106,6 @@ func ConvertVerdictsSliceToMap(original []Verdict) map[uint64]Verdict {
 }
 
 // FilterSolutions function filters in elements from original slice not found in filterOut elements
-// TODO: add test
 func FilterSolutions(original []Solution, filterOut map[Solution]struct{}) []Solution {
 	if original == nil {
 		return nil
@@ -131,7 +125,6 @@ func FilterSolutions(original []Solution, filterOut map[Solution]struct{}) []Sol
 }
 
 // ApplySolutionsFilters function applies all necessary filters to original slice
-// TODO: add test
 func ApplySolutionsFilters(original []Solution) []Solution {
 	// excluded is a hardcoded set of elements to filter out from original slice
 	excluded := map[Solution]struct{}{
