@@ -2,7 +2,6 @@
 package utils
 
 import (
-	"errors"
 	"fmt"
 	"github.com/ozoncp/ocp-solution-api/internal/solution"
 	"github.com/ozoncp/ocp-solution-api/internal/verdict"
@@ -18,7 +17,7 @@ func SplitSolutionsToBatches(solutions []Solution, batchSize int) ([][]Solution,
 	}
 
 	if batchSize < 1 {
-		return nil, errors.New(fmt.Sprintf("batchSize = %v doesn't make sense", batchSize))
+		return nil, fmt.Errorf("batchSize = %v doesn't make sense", batchSize)
 	}
 
 	batchesCap := len(solutions) / batchSize
@@ -44,7 +43,7 @@ func SplitVerdictsToBatches(verdicts []Verdict, batchSize int) ([][]Verdict, err
 	}
 
 	if batchSize < 1 {
-		return nil, errors.New(fmt.Sprintf("batchSize = %v doesn't make sense", batchSize))
+		return nil, fmt.Errorf("batchSize = %v doesn't make sense", batchSize)
 	}
 
 	batchesCap := len(verdicts) / batchSize
@@ -72,7 +71,7 @@ func InvertSolutionsMap(original map[uint64]Solution) (map[Solution]uint64, erro
 	inverted := make(map[Solution]uint64, len(original))
 	for key, value := range original {
 		if _, found := inverted[value]; found {
-			return nil, errors.New(fmt.Sprintf("can't invert original map, got duplicated value: \"%v\"", value))
+			return nil, fmt.Errorf("can't invert original map, got duplicated value: \"%v\"", value)
 		}
 		inverted[value] = key
 	}
