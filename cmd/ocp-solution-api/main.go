@@ -14,7 +14,7 @@ Welcome to Solution microservice!
 Author: Aleksandr Fedorov
 Start date: 2021/05/13
 `
-	configFileName = `config`
+	configFileName string = `config`
 )
 
 // watchConfigFile function implements a way to watch config file updates

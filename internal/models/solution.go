@@ -1,11 +1,8 @@
-package solution
+package models
 
 import (
 	"encoding/json"
-	"github.com/ozoncp/ocp-solution-api/internal/verdict"
 )
-
-type Verdict = verdict.Verdict
 
 type Solution struct {
 	id      uint64
@@ -15,8 +12,14 @@ type Solution struct {
 	// TODO: integrate Check after 3rd lesson review
 }
 
-// New function is a convenient way to construct Solution object
-func New(id uint64, issueId uint64) *Solution {
+type jsonSolution struct {
+	Id      uint64   `json:"id"`
+	IssueId uint64   `json:"issue_id"`
+	Verdict *Verdict `json:"verdict"`
+}
+
+// NewSolution function is a convenient way to construct Solution object
+func NewSolution(id uint64, issueId uint64) *Solution {
 	return &Solution{
 		id,
 		issueId,
@@ -31,6 +34,29 @@ func (s Solution) String() (string, error) {
 		return "", err
 	}
 	return string(out), nil
+}
+
+func (s Solution) MarshalJSON() ([]byte, error) {
+	proxy := &jsonSolution{
+		Id:      s.id,
+		IssueId: s.issueId,
+		Verdict: s.verdict,
+	}
+	return json.Marshal(proxy)
+}
+
+func (s *Solution) UnmarshalJSON(b []byte) error {
+	proxy := &jsonSolution{}
+
+	if err := json.Unmarshal(b, proxy); err != nil {
+		return err
+	}
+
+	s.id = proxy.Id
+	s.issueId = proxy.IssueId
+	s.verdict = proxy.Verdict
+
+	return nil
 }
 
 // Id method helps to retrieve id from Solution
