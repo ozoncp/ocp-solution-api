@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/ozoncp/ocp-solution-api/internal/flusher"
 	"github.com/ozoncp/ocp-solution-api/internal/mocks"
-	"github.com/ozoncp/ocp-solution-api/internal/solution"
+	"github.com/ozoncp/ocp-solution-api/internal/models"
 )
 
 var _ = Describe("Flusher", func() {
@@ -16,8 +16,8 @@ var _ = Describe("Flusher", func() {
 		mockRepo  *mocks.MockRepo
 		batchSize int
 		f         flusher.Flusher
-		solutions []solution.Solution
-		remaining []solution.Solution
+		solutions []models.Solution
+		remaining []models.Solution
 		err       error
 	)
 
@@ -38,7 +38,7 @@ var _ = Describe("Flusher", func() {
 	Context("noop with empty solutions", func() {
 		BeforeEach(func() {
 			batchSize = 2
-			solutions = []solution.Solution{}
+			solutions = []models.Solution{}
 
 			mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(nil).Times(0)
 		})
@@ -52,7 +52,7 @@ var _ = Describe("Flusher", func() {
 	Context("saves all solutions", func() {
 		BeforeEach(func() {
 			batchSize = 2
-			solutions = []solution.Solution{{}, {}, {}}
+			solutions = []models.Solution{{}, {}, {}}
 
 			mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(nil).Times(2)
 		})
@@ -70,7 +70,7 @@ var _ = Describe("Flusher", func() {
 		)
 
 		BeforeEach(func() {
-			solutions = []solution.Solution{{}, {}, {}, {}, {}}
+			solutions = []models.Solution{{}, {}, {}, {}, {}}
 			halfSize = len(solutions) / 2
 			batchSize = halfSize
 			repoError = errors.New("out of memory")

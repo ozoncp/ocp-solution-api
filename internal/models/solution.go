@@ -1,11 +1,8 @@
-package solution
+package models
 
 import (
 	"encoding/json"
-	"github.com/ozoncp/ocp-solution-api/internal/verdict"
 )
-
-type Verdict = verdict.Verdict
 
 type Solution struct {
 	id      uint64
@@ -21,8 +18,8 @@ type jsonSolution struct {
 	Verdict *Verdict `json:"verdict"`
 }
 
-// New function is a convenient way to construct Solution object
-func New(id uint64, issueId uint64) *Solution {
+// NewSolution function is a convenient way to construct Solution object
+func NewSolution(id uint64, issueId uint64) *Solution {
 	return &Solution{
 		id,
 		issueId,

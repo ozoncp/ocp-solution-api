@@ -1,15 +1,13 @@
 package flusher
 
 import (
+	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
-	"github.com/ozoncp/ocp-solution-api/internal/solution"
 	"github.com/ozoncp/ocp-solution-api/internal/utils"
 )
 
-type Solution = solution.Solution
-
 type Flusher interface {
-	Flush(solutions []Solution) ([]Solution, error)
+	Flush(solutions []models.Solution) ([]models.Solution, error)
 }
 
 type flusher struct {
@@ -18,7 +16,7 @@ type flusher struct {
 }
 
 // Flush method tries to flush all solutions passed to it and returns remaining solutions and error if error occurred
-func (f flusher) Flush(solutions []Solution) ([]Solution, error) {
+func (f flusher) Flush(solutions []models.Solution) ([]models.Solution, error) {
 	batches, err := utils.SplitSolutionsToBatches(solutions, f.batchSize)
 	if err != nil {
 		return solutions, err

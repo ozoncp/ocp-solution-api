@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	solution "github.com/ozoncp/ocp-solution-api/internal/solution"
+	solution "github.com/ozoncp/ocp-solution-api/internal/models"
 )
 
 // MockRepo is a mock of Repo interface.

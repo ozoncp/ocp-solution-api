@@ -1,20 +1,19 @@
-package solution
+package models
 
 import (
 	"encoding/json"
-	"github.com/ozoncp/ocp-solution-api/internal/verdict"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestSolution_Id(t *testing.T) {
-	ptr := New(1, 2)
+	ptr := NewSolution(1, 2)
 	id := ptr.Id()
 	assert.Equal(t, uint64(1), id)
 }
 
 func TestSolution_IssueId(t *testing.T) {
-	ptr := New(1, 2)
+	ptr := NewSolution(1, 2)
 	issueId := ptr.IssueId()
 	assert.Equal(t, uint64(2), issueId)
 }
@@ -22,7 +21,7 @@ func TestSolution_IssueId(t *testing.T) {
 func TestSolution_String(t *testing.T) {
 	// nil verdict
 	{
-		ptr := New(0, 0)
+		ptr := NewSolution(0, 0)
 		solutionStr, err := ptr.String()
 		assert.Nil(t, err)
 		expected := `{"id":0,"issue_id":0,"verdict":null}`
@@ -31,8 +30,8 @@ func TestSolution_String(t *testing.T) {
 
 	// non-nil verdict
 	{
-		ptr := New(1, 2)
-		ptr.verdict = verdict.New(3, 4, verdict.Failed, "Try again!")
+		ptr := NewSolution(1, 2)
+		ptr.verdict = NewVerdict(3, 4, Failed, "Try again!")
 		solutionStr, err := ptr.String()
 		assert.Nil(t, err)
 		// check json string without timestamp
@@ -51,7 +50,7 @@ func TestSolution_String(t *testing.T) {
 		status, comment, userId := unmarshalled.verdict.Status()
 		assert.Equal(t, uint64(3), solutionId)
 		assert.Equal(t, uint64(4), userId)
-		assert.Equal(t, status, verdict.Failed)
+		assert.Equal(t, status, Failed)
 		assert.Equal(t, comment, "Try again!")
 	}
 }
@@ -59,19 +58,19 @@ func TestSolution_String(t *testing.T) {
 func TestSolution_Verdict(t *testing.T) {
 	// nil verdict
 	{
-		ptr := New(0, 0).Verdict()
+		ptr := NewSolution(0, 0).Verdict()
 		assert.Nil(t, ptr)
 	}
 
 	// non-nil verdict
 	{
-		solution := New(0, 0)
-		solution.verdict = verdict.New(1, 2, verdict.InProgress, "")
+		solution := NewSolution(0, 0)
+		solution.verdict = NewVerdict(1, 2, InProgress, "")
 		ptr := solution.Verdict()
 		assert.NotNil(t, ptr)
 		assert.Equal(t, ptr.SolutionId(), uint64(1))
 		status, comment, userId := ptr.Status()
-		assert.Equal(t, status, verdict.InProgress)
+		assert.Equal(t, status, InProgress)
 		assert.Equal(t, comment, "")
 		assert.Equal(t, userId, uint64(2))
 	}

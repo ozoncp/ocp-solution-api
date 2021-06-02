@@ -1,4 +1,4 @@
-package verdict
+package models
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 
 func TestVerdict_String(t *testing.T) {
 	{
-		ptr := New(0, 0, InProgress, "")
+		ptr := NewVerdict(0, 0, InProgress, "")
 		verdictStr, err := ptr.String()
 		assert.Nil(t, err)
 		// check json string without timestamp
@@ -29,7 +29,7 @@ func TestVerdict_String(t *testing.T) {
 	}
 
 	{
-		ptr := New(1, 2, Passed, "Great job!")
+		ptr := NewVerdict(1, 2, Passed, "Great job!")
 		verdictStr, err := ptr.String()
 		assert.Nil(t, err)
 		// check json string without timestamp
@@ -52,14 +52,14 @@ func TestVerdict_String(t *testing.T) {
 func TestVerdict_InProgress(t *testing.T) {
 	// in progress
 	{
-		ptr := New(0, 0, InProgress, "")
+		ptr := NewVerdict(0, 0, InProgress, "")
 		inProgress := ptr.InProgress()
 		assert.Equal(t, true, inProgress)
 	}
 
 	// not in progress
 	{
-		ptr := New(0, 0, Passed, "")
+		ptr := NewVerdict(0, 0, Passed, "")
 		inProgress := ptr.InProgress()
 		assert.Equal(t, false, inProgress)
 	}
@@ -76,7 +76,7 @@ func TestVerdict_UpdateTimestamp(t *testing.T) {
 
 	// non-nil verdict ptr
 	{
-		ptr := New(0, 0, Passed, "")
+		ptr := NewVerdict(0, 0, Passed, "")
 		start := ptr.timestamp
 		time.Sleep(1 * time.Nanosecond)
 		ptr.UpdateTimestamp()
@@ -96,7 +96,7 @@ func TestVerdict_UpdateStatus(t *testing.T) {
 
 	// non-nil verdict ptr
 	{
-		ptr := New(1, 2, Passed, "")
+		ptr := NewVerdict(1, 2, Passed, "")
 		assert.Equal(t, ptr.solutionId, uint64(1))
 		assert.Equal(t, ptr.userId, uint64(2))
 		assert.Equal(t, ptr.status, Passed)
@@ -114,7 +114,7 @@ func TestVerdict_UpdateStatus(t *testing.T) {
 }
 
 func TestVerdict_Status(t *testing.T) {
-	ptr := New(1, 2, Passed, "Great job!")
+	ptr := NewVerdict(1, 2, Passed, "Great job!")
 	status, comment, userId := ptr.Status()
 	assert.Equal(t, status, Passed)
 	assert.Equal(t, comment, "Great job!")
@@ -122,7 +122,7 @@ func TestVerdict_Status(t *testing.T) {
 }
 
 func TestVerdict_SolutionId(t *testing.T) {
-	ptr := New(1, 2, Passed, "Great job!")
+	ptr := NewVerdict(1, 2, Passed, "Great job!")
 	solutionId := ptr.SolutionId()
 	assert.Equal(t, solutionId, uint64(1))
 }

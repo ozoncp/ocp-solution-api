@@ -1,4 +1,4 @@
-package verdict
+package models
 
 import (
 	"encoding/json"
@@ -32,8 +32,8 @@ type jsonVerdict struct {
 	Comment    string `json:"comment"`
 }
 
-// New function is a convenient way to construct Verdict object
-func New(solutionId uint64, userId uint64, status Status, comment string) *Verdict {
+// NewVerdict function is a convenient way to construct Verdict object
+func NewVerdict(solutionId uint64, userId uint64, status Status, comment string) *Verdict {
 	return &Verdict{
 		solutionId,
 		userId,

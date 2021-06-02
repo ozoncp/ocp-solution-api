@@ -1,9 +1,7 @@
 package repo
 
-import "github.com/ozoncp/ocp-solution-api/internal/solution"
-
-type Solution = solution.Solution
+import "github.com/ozoncp/ocp-solution-api/internal/models"
 
 type Repo interface {
-	AddSolutions(solutions []Solution) error
+	AddSolutions(solutions []models.Solution) error
 }
