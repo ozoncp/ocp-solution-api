@@ -131,6 +131,6 @@ func ApplySolutionsFilters(original []models.Solution) []models.Solution {
 }
 
 func IsNil(a interface{}) bool {
-	defer func() { recover() }()
+	defer func() { _ = recover() }()
 	return a == nil || reflect.ValueOf(a).IsNil()
 }
