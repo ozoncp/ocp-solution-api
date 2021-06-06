@@ -41,13 +41,17 @@ func (s *saver) Close() error {
 	return err
 }
 
-func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool) Saver {
+func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool) (Saver, error) {
 	s := &saver{
 		capacity:            capacity,
 		slice:               make([]models.Solution, 0, capacity),
 		forgetAllOnOverflow: forgetAllOnOverflow,
 		f:                   flusher,
 		doneCh:              make(chan bool),
+	}
+
+	if capacity < uint(1) {
+		return nil, fmt.Errorf("zero Saver capacity doesn't make sense")
 	}
 
 	const tickerPeriod = 5 * time.Second
@@ -66,5 +70,5 @@ func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool) Saver
 		}
 	}()
 
-	return s
+	return s, nil
 }
