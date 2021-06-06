@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	solution "github.com/ozoncp/ocp-solution-api/internal/models"
+	models "github.com/ozoncp/ocp-solution-api/internal/models"
 )
 
 // MockRepo is a mock of Repo interface.
@@ -35,7 +35,7 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 }
 
 // AddSolutions mocks base method.
-func (m *MockRepo) AddSolutions(arg0 []solution.Solution) error {
+func (m *MockRepo) AddSolutions(arg0 []models.Solution) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddSolutions", arg0)
 	ret0, _ := ret[0].(error)

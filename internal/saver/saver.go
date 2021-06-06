@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ozoncp/ocp-solution-api/internal/flusher"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
+	"github.com/ozoncp/ocp-solution-api/internal/utils"
 	"time"
 )
 
@@ -42,16 +43,20 @@ func (s *saver) Close() error {
 }
 
 func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool) (Saver, error) {
+	if utils.IsNil(flusher) {
+		return nil, fmt.Errorf("got nil Flusher")
+	}
+
+	if capacity < uint(1) {
+		return nil, fmt.Errorf("zero Saver capacity doesn't make sense")
+	}
+
 	s := &saver{
 		capacity:            capacity,
 		slice:               make([]models.Solution, 0, capacity),
 		forgetAllOnOverflow: forgetAllOnOverflow,
 		f:                   flusher,
 		doneCh:              make(chan bool),
-	}
-
-	if capacity < uint(1) {
-		return nil, fmt.Errorf("zero Saver capacity doesn't make sense")
 	}
 
 	const tickerPeriod = 5 * time.Second

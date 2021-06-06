@@ -4,6 +4,7 @@ package utils
 import (
 	"fmt"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
+	"reflect"
 )
 
 // SplitSolutionsToBatches function splits slice of Solution into batches of predefined number of elements
@@ -127,4 +128,9 @@ func ApplySolutionsFilters(original []models.Solution) []models.Solution {
 	}
 	filtered := FilterSolutions(original, excluded)
 	return filtered
+}
+
+func IsNil(a interface{}) bool {
+	defer func() { recover() }()
+	return a == nil || reflect.ValueOf(a).IsNil()
 }
