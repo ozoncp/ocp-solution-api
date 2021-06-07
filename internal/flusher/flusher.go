@@ -1,6 +1,7 @@
 package flusher
 
 import (
+	"fmt"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	"github.com/ozoncp/ocp-solution-api/internal/utils"
@@ -31,9 +32,17 @@ func (f flusher) Flush(solutions []models.Solution) ([]models.Solution, error) {
 	return nil, nil
 }
 
-func New(repo repo.Repo, batchSize int) Flusher {
+func New(repo repo.Repo, batchSize int) (Flusher, error) {
+	if utils.IsNil(repo) {
+		return nil, fmt.Errorf("got nil Repo")
+	}
+
+	if batchSize < 1 {
+		return nil, fmt.Errorf("batchSize < 1 doesn't make sense")
+	}
+
 	return &flusher{
 		repo:      repo,
 		batchSize: batchSize,
-	}
+	}, nil
 }

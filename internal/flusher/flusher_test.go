@@ -27,12 +27,50 @@ var _ = Describe("Flusher", func() {
 	})
 
 	JustBeforeEach(func() {
-		f = flusher.New(mockRepo, batchSize)
-		remaining, err = f.Flush(solutions)
+		if f, err = flusher.New(mockRepo, batchSize); f != nil {
+			remaining, err = f.Flush(solutions)
+		}
 	})
 
 	AfterEach(func() {
 		ctrl.Finish()
+	})
+
+	Context("nil Repo", func() {
+		BeforeEach(func() {
+			batchSize = 1
+			mockRepo = nil
+		})
+
+		It("", func() {
+			Expect(f).Should(BeNil())
+			Expect(err).ShouldNot(BeNil())
+			Expect(err.Error()).Should(ContainSubstring("got nil Repo"))
+		})
+	})
+
+	Context("zero batch size", func() {
+		BeforeEach(func() {
+			batchSize = 0
+		})
+
+		It("", func() {
+			Expect(f).Should(BeNil())
+			Expect(err).ShouldNot(BeNil())
+			Expect(err.Error()).Should(ContainSubstring("batchSize < 1"))
+		})
+	})
+
+	Context("negative batch size", func() {
+		BeforeEach(func() {
+			batchSize = -1
+		})
+
+		It("", func() {
+			Expect(f).Should(BeNil())
+			Expect(err).ShouldNot(BeNil())
+			Expect(err.Error()).Should(ContainSubstring("batchSize < 1"))
+		})
 	})
 
 	Context("noop with empty solutions", func() {
@@ -44,6 +82,7 @@ var _ = Describe("Flusher", func() {
 		})
 
 		It("", func() {
+			Expect(f).ShouldNot(BeNil())
 			Expect(remaining).Should(BeNil())
 			Expect(err).Should(BeNil())
 		})
@@ -58,6 +97,7 @@ var _ = Describe("Flusher", func() {
 		})
 
 		It("", func() {
+			Expect(f).ShouldNot(BeNil())
 			Expect(remaining).Should(BeNil())
 			Expect(err).Should(BeNil())
 		})
@@ -82,6 +122,7 @@ var _ = Describe("Flusher", func() {
 		})
 
 		It("", func() {
+			Expect(f).ShouldNot(BeNil())
 			Expect(err).Should(BeEquivalentTo(repoError))
 			Expect(remaining).ShouldNot(BeNil())
 			Expect(len(remaining)).To(Equal(len(solutions) - batchSize))
