@@ -50,7 +50,7 @@ func (s *saver) Close() error {
 	return err
 }
 
-func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool) (Saver, error) {
+func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool, tickerPeriod time.Duration) (Saver, error) {
 	if utils.IsNil(flusher) {
 		return nil, fmt.Errorf("got nil Flusher")
 	}
@@ -67,8 +67,6 @@ func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool) (Save
 		f:                   flusher,
 		doneCh:              make(chan bool),
 	}
-
-	const tickerPeriod = 5 * time.Second
 
 	go func() {
 		ticker := time.NewTicker(tickerPeriod)

@@ -9,6 +9,7 @@ import (
 	"github.com/ozoncp/ocp-solution-api/internal/mocks"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/saver"
+	"time"
 )
 
 var _ = Describe("Saver", func() {
@@ -38,7 +39,7 @@ var _ = Describe("Saver", func() {
 
 	JustBeforeEach(func() {
 		f, err = flusher.New(mockRepo, batchSize)
-		if s, err = saver.New(capacity, f, forgetAllOnOverflow); s != nil {
+		if s, err = saver.New(capacity, f, forgetAllOnOverflow, 5*time.Second); s != nil {
 			for _, solution := range solutions {
 				s.Save(solution)
 			}
