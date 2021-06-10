@@ -4,16 +4,16 @@ package ocp.verdict.api;
 option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api;ocp_verdict_api";
 
 message Verdict {
-  uint64 solution_id = 1;
-  uint64 user_id = 2;
+  uint64 solutionId = 1;
+  uint64 userId = 2;
 
   enum Status {
-    IN_PROGRESS = 0;
-    PASSED = 1;
-    FAILED = 2;
-    SYNTAX_ERROR = 3;
-    COMPILATION_ERROR = 4;
-    DROPPED = 5;
+    InProgress = 0;
+    Passed = 1;
+    Failed = 2;
+    SyntaxError = 3;
+    CompilationError = 4;
+    Dropped = 5;
   }
 
   Status status = 3;

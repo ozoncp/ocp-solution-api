@@ -1,13 +1,13 @@
 syntax = "proto3";
 package ocp.solution.api;
 
-import "github.com/ozoncp/ocp-solution-api/api/ocp-verdict-api/ocp-verdict-api.proto";
+import "api/ocp-verdict-api/ocp-verdict-api.proto";
 
 option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api;ocp_solution_api";
 
 message Solution {
-  uint64 solution_id = 1;
-  uint64 issue_id = 2;
+  uint64 solutionId = 1;
+  uint64 issueId = 2;
 
   ocp.verdict.api.Verdict verdict = 3;
 }
