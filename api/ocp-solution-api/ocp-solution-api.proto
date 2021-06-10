@@ -5,6 +5,55 @@ import "api/ocp-verdict-api/ocp-verdict-api.proto";
 
 option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api;ocp_solution_api";
 
+// CRUD - create, read, update, delete
+service OcpSolutionApi {
+  rpc CreateSolutionV1(CreateSolutionV1Request) returns (CreateSolutionV1Response) {
+  }
+
+  rpc ListSolutionsV1(ListSolutionsV1Request) returns (ListSolutionsV1Response) {
+  }
+
+  rpc DescribeSolutionV1(DescribeSolutionV1Request) returns (DescribeSolutionV1Response) {
+  }
+
+  rpc RemoveSolutionV1(RemoveSolutionV1Request) returns (RemoveSolutionV1Response) {
+  }
+}
+
+message CreateSolutionV1Request {
+  uint64 solutionId = 1;
+  uint64 issueId = 2;
+}
+
+message CreateSolutionV1Response {
+  Solution solution = 1;
+}
+
+message ListSolutionsV1Request {
+  uint64 limit = 1;
+  uint64 offset = 2;
+}
+
+message ListSolutionsV1Response {
+  repeated Solution solutions = 1;
+}
+
+message DescribeSolutionV1Request {
+  uint64 solutionId = 1;
+}
+
+message DescribeSolutionV1Response {
+  Solution solution = 1;
+}
+
+message RemoveSolutionV1Request {
+  uint64 solutionId = 1;
+}
+
+message RemoveSolutionV1Response {
+  bool found = 1;
+}
+
 message Solution {
   uint64 solutionId = 1;
   uint64 issueId = 2;

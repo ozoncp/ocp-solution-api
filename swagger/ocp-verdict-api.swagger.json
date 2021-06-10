@@ -1,0 +1,119 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/ocp-verdict-api/ocp-verdict-api.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "VerdictStatus": {
+      "type": "string",
+      "enum": [
+        "InProgress",
+        "Passed",
+        "Failed",
+        "SyntaxError",
+        "CompilationError",
+        "Dropped"
+      ],
+      "default": "InProgress"
+    },
+    "apiCreateVerdictV1Response": {
+      "type": "object",
+      "properties": {
+        "Verdict": {
+          "$ref": "#/definitions/apiVerdict"
+        }
+      }
+    },
+    "apiDescribeVerdictV1Response": {
+      "type": "object",
+      "properties": {
+        "Verdict": {
+          "$ref": "#/definitions/apiVerdict"
+        }
+      }
+    },
+    "apiListVerdictsV1Response": {
+      "type": "object",
+      "properties": {
+        "Verdicts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiVerdict"
+          }
+        }
+      }
+    },
+    "apiRemoveVerdictV1Response": {
+      "type": "object",
+      "properties": {
+        "found": {
+          "type": "boolean"
+        }
+      }
+    },
+    "apiVerdict": {
+      "type": "object",
+      "properties": {
+        "solutionId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "status": {
+          "$ref": "#/definitions/VerdictStatus"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "int64"
+        },
+        "comment": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

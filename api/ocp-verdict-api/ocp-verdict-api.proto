@@ -3,6 +3,54 @@ package ocp.verdict.api;
 
 option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api;ocp_verdict_api";
 
+service OcpVerdictApi {
+  rpc CreateVerdictV1(CreateVerdictV1Request) returns (CreateVerdictV1Response) {
+  }
+
+  rpc ListVerdictsV1(ListVerdictsV1Request) returns (ListVerdictsV1Response) {
+  }
+
+  rpc DescribeVerdictV1(DescribeVerdictV1Request) returns (DescribeVerdictV1Response) {
+  }
+
+  rpc RemoveVerdictV1(RemoveVerdictV1Request) returns (RemoveVerdictV1Response) {
+  }
+}
+
+message CreateVerdictV1Request {
+  uint64 VerdictId = 1;
+  uint64 issueId = 2;
+}
+
+message CreateVerdictV1Response {
+  Verdict Verdict = 1;
+}
+
+message ListVerdictsV1Request {
+  uint64 limit = 1;
+  uint64 offset = 2;
+}
+
+message ListVerdictsV1Response {
+  repeated Verdict Verdicts = 1;
+}
+
+message DescribeVerdictV1Request {
+  uint64 VerdictId = 1;
+}
+
+message DescribeVerdictV1Response {
+  Verdict Verdict = 1;
+}
+
+message RemoveVerdictV1Request {
+  uint64 VerdictId = 1;
+}
+
+message RemoveVerdictV1Response {
+  bool found = 1;
+}
+
 message Verdict {
   uint64 solutionId = 1;
   uint64 userId = 2;
