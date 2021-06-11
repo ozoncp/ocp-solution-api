@@ -20,7 +20,7 @@ type saver struct {
 	slice               []models.Solution
 	forgetAllOnOverflow bool
 	f                   flusher.Flusher
-	doneCh              chan bool
+	done                chan struct{}
 }
 
 func (s *saver) Save(solution models.Solution) {
@@ -46,7 +46,7 @@ func (s *saver) Close() error {
 	if s.slice, err = s.f.Flush(s.slice); err != nil {
 		err = fmt.Errorf("lost %v solutions: %w", len(s.slice), err)
 	}
-	close(s.doneCh)
+	s.done <- struct{}{}
 	return err
 }
 
@@ -65,7 +65,7 @@ func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool, ticke
 		slice:               make([]models.Solution, 0, capacity),
 		forgetAllOnOverflow: forgetAllOnOverflow,
 		f:                   flusher,
-		doneCh:              make(chan bool),
+		done:                make(chan struct{}),
 	}
 
 	go func() {
@@ -76,7 +76,7 @@ func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool, ticke
 			select {
 			case <-ticker.C:
 				s.slice, _ = s.f.Flush(s.slice)
-			case <-s.doneCh:
+			case <-s.done:
 				return
 			}
 		}

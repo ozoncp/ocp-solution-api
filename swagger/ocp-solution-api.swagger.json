@@ -1,0 +1,135 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/ocp-solution-api/ocp-solution-api.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {
+    "VerdictStatus": {
+      "type": "string",
+      "enum": [
+        "InProgress",
+        "Passed",
+        "Failed",
+        "SyntaxError",
+        "CompilationError",
+        "Dropped"
+      ],
+      "default": "InProgress"
+    },
+    "apiCreateSolutionV1Response": {
+      "type": "object",
+      "properties": {
+        "solution": {
+          "$ref": "#/definitions/apiSolution"
+        }
+      }
+    },
+    "apiDescribeSolutionV1Response": {
+      "type": "object",
+      "properties": {
+        "solution": {
+          "$ref": "#/definitions/apiSolution"
+        }
+      }
+    },
+    "apiListSolutionsV1Response": {
+      "type": "object",
+      "properties": {
+        "solutions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiSolution"
+          }
+        }
+      }
+    },
+    "apiRemoveSolutionV1Response": {
+      "type": "object",
+      "properties": {
+        "found": {
+          "type": "boolean"
+        }
+      }
+    },
+    "apiSolution": {
+      "type": "object",
+      "properties": {
+        "solutionId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "issueId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "verdict": {
+          "$ref": "#/definitions/apiVerdict"
+        }
+      }
+    },
+    "apiVerdict": {
+      "type": "object",
+      "properties": {
+        "solutionId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "status": {
+          "$ref": "#/definitions/VerdictStatus"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "int64"
+        },
+        "comment": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
