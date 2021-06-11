@@ -10,7 +10,126 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/v1/solutions": {
+      "get": {
+        "operationId": "OcpSolutionApi_ListSolutionsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListSolutionsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpSolutionApi"
+        ]
+      },
+      "post": {
+        "operationId": "OcpSolutionApi_CreateSolutionV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateSolutionV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "OcpSolutionApi"
+        ]
+      }
+    },
+    "/v1/solutions/{solution_id}": {
+      "get": {
+        "operationId": "OcpSolutionApi_DescribeSolutionV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiDescribeSolutionV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "solution_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpSolutionApi"
+        ]
+      },
+      "delete": {
+        "operationId": "OcpSolutionApi_RemoveSolutionV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiRemoveSolutionV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "solution_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpSolutionApi"
+        ]
+      }
+    }
+  },
   "definitions": {
     "VerdictStatus": {
       "type": "string",
@@ -62,11 +181,11 @@
     "apiSolution": {
       "type": "object",
       "properties": {
-        "solutionId": {
+        "solution_id": {
           "type": "string",
           "format": "uint64"
         },
-        "issueId": {
+        "issue_id": {
           "type": "string",
           "format": "uint64"
         },
@@ -78,11 +197,11 @@
     "apiVerdict": {
       "type": "object",
       "properties": {
-        "solutionId": {
+        "solution_id": {
           "type": "string",
           "format": "uint64"
         },
-        "userId": {
+        "user_id": {
           "type": "string",
           "format": "uint64"
         },

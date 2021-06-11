@@ -1,29 +1,44 @@
 syntax = "proto3";
 package ocp.verdict.api;
 
+import "google/api/annotations.proto";
+import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
+
 option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api;ocp_verdict_api";
 
 service OcpVerdictApi {
   rpc CreateVerdictV1(CreateVerdictV1Request) returns (CreateVerdictV1Response) {
+    option (google.api.http) = {
+      post: "/v1/verdicts"
+    };
   }
 
   rpc ListVerdictsV1(ListVerdictsV1Request) returns (ListVerdictsV1Response) {
+    option (google.api.http) = {
+      get: "/v1/verdicts"
+    };
   }
 
   rpc DescribeVerdictV1(DescribeVerdictV1Request) returns (DescribeVerdictV1Response) {
+    option (google.api.http) = {
+      get: "/v1/verdicts/{verdict_id}"
+    };
   }
 
   rpc RemoveVerdictV1(RemoveVerdictV1Request) returns (RemoveVerdictV1Response) {
+    option (google.api.http) = {
+      delete: "/v1/verdicts/{verdict_id}"
+    };
   }
 }
 
 message CreateVerdictV1Request {
-  uint64 VerdictId = 1;
-  uint64 issueId = 2;
+  uint64 verdict_id = 1 [(validate.rules).uint64.gt = 0];
+  uint64 issue_id = 2 [(validate.rules).uint64.gt = 0];
 }
 
 message CreateVerdictV1Response {
-  Verdict Verdict = 1;
+  Verdict verdict = 1;
 }
 
 message ListVerdictsV1Request {
@@ -32,19 +47,19 @@ message ListVerdictsV1Request {
 }
 
 message ListVerdictsV1Response {
-  repeated Verdict Verdicts = 1;
+  repeated Verdict verdicts = 1;
 }
 
 message DescribeVerdictV1Request {
-  uint64 VerdictId = 1;
+  uint64 verdict_id = 1 [(validate.rules).uint64.gt = 0];
 }
 
 message DescribeVerdictV1Response {
-  Verdict Verdict = 1;
+  Verdict verdict = 1;
 }
 
 message RemoveVerdictV1Request {
-  uint64 VerdictId = 1;
+  uint64 verdict_id = 1 [(validate.rules).uint64.gt = 0];
 }
 
 message RemoveVerdictV1Response {
@@ -52,8 +67,8 @@ message RemoveVerdictV1Response {
 }
 
 message Verdict {
-  uint64 solutionId = 1;
-  uint64 userId = 2;
+  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
+  uint64 user_id = 2 [(validate.rules).uint64.gt = 0];
 
   enum Status {
     InProgress = 0;

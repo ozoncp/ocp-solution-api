@@ -2,27 +2,40 @@ syntax = "proto3";
 package ocp.solution.api;
 
 import "api/ocp-verdict-api/ocp-verdict-api.proto";
+import "google/api/annotations.proto";
+import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
 
 option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api;ocp_solution_api";
 
-// CRUD - create, read, update, delete
 service OcpSolutionApi {
   rpc CreateSolutionV1(CreateSolutionV1Request) returns (CreateSolutionV1Response) {
+    option (google.api.http) = {
+      post: "/v1/solutions"
+    };
   }
 
   rpc ListSolutionsV1(ListSolutionsV1Request) returns (ListSolutionsV1Response) {
+    option (google.api.http) = {
+      get: "/v1/solutions"
+    };
   }
 
   rpc DescribeSolutionV1(DescribeSolutionV1Request) returns (DescribeSolutionV1Response) {
+    option (google.api.http) = {
+      get: "/v1/solutions/{solution_id}"
+    };
   }
 
   rpc RemoveSolutionV1(RemoveSolutionV1Request) returns (RemoveSolutionV1Response) {
+    option (google.api.http) = {
+      delete: "/v1/solutions/{solution_id}"
+    };
   }
 }
 
 message CreateSolutionV1Request {
-  uint64 solutionId = 1;
-  uint64 issueId = 2;
+  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
+  uint64 issue_id = 2 [(validate.rules).uint64.gt = 0];
 }
 
 message CreateSolutionV1Response {
@@ -39,7 +52,7 @@ message ListSolutionsV1Response {
 }
 
 message DescribeSolutionV1Request {
-  uint64 solutionId = 1;
+  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
 }
 
 message DescribeSolutionV1Response {
@@ -47,7 +60,7 @@ message DescribeSolutionV1Response {
 }
 
 message RemoveSolutionV1Request {
-  uint64 solutionId = 1;
+  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
 }
 
 message RemoveSolutionV1Response {
@@ -55,8 +68,8 @@ message RemoveSolutionV1Response {
 }
 
 message Solution {
-  uint64 solutionId = 1;
-  uint64 issueId = 2;
+  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
+  uint64 issue_id = 2 [(validate.rules).uint64.gt = 0];
 
   ocp.verdict.api.Verdict verdict = 3;
 }

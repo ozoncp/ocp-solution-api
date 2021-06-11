@@ -1,19 +1,41 @@
-// TODO add ocp-solution-api executable description
 package main
 
 import (
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+
+	"log"
+	"net"
 	"fmt"
+
+	api "github.com/ozoncp/ocp-solution-api/internal/api"
+	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"
 )
 
 const (
-	description string = `
-Welcome to Solution microservice!
-Author: Aleksandr Fedorov
-Start date: 2021/05/13
-`
+	grpcPort = ":7002"
 )
 
-// Function main is an entry point for executable
+func run() error {
+	listen, err := net.Listen("tcp", grpcPort)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	s := grpc.NewServer()
+	reflection.Register(s)
+	desc.RegisterOcpSolutionApiServer(s, api.NewOcpSolutionApi())
+
+	fmt.Printf("server is listening on localhost%v\n", grpcPort)
+	if err := s.Serve(listen); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+
+	return nil
+}
+
 func main() {
-	fmt.Print(description)
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
 }
