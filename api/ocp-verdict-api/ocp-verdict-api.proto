@@ -19,7 +19,7 @@ service OcpVerdictApi {
     };
   }
 
-  rpc DescribeVerdictV1(DescribeVerdictV1Request) returns (DescribeVerdictV1Response) {
+  rpc UpdateVerdictV1(UpdateVerdictV1Request) returns (UpdateVerdictV1Response) {
     option (google.api.http) = {
       get: "/v1/verdicts/{verdict_id}"
     };
@@ -50,11 +50,14 @@ message ListVerdictsV1Response {
   repeated Verdict verdicts = 1;
 }
 
-message DescribeVerdictV1Request {
+message UpdateVerdictV1Request {
   uint64 verdict_id = 1 [(validate.rules).uint64.gt = 0];
+  uint64 user_id = 2;
+  Verdict.Status status = 3;
+  string comment = 4;
 }
 
-message DescribeVerdictV1Response {
+message UpdateVerdictV1Response {
   Verdict verdict = 1;
 }
 

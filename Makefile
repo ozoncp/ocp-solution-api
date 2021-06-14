@@ -6,7 +6,9 @@ build: .deps .vendor-proto .generate .build
 
 .PHONY: .build
 .build:
-	CGO_ENABLED=0 GOOS=$(OS) go build -o bin/ocp-solution-api cmd/ocp-solution-api/main.go
+	CGO_ENABLED=0 GOOS=$(OS) go build -o bin/ocp-solution-api cmd/ocp-solution-api/main.go || \
+	CGO_ENABLED=0 GOOS=windows go build -o bin/ocp-solution-api cmd/ocp-solution-api/main.go
+	go mod tidy
 
 .PHONY: .generate
 .generate:
@@ -51,11 +53,10 @@ vendor.protogen/github.com/envoyproxy:
 	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 	go get -u github.com/golang/protobuf/proto
 	go get -u github.com/golang/protobuf/protoc-gen-go
-	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
-	go install github.com/envoyproxy/protoc-gen-validate
+	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	go get -u github.com/envoyproxy/protoc-gen-validate
 
 .PHONY: postgres
 postgres:
 	pg_ctl -D /usr/local/var/postgres start
-

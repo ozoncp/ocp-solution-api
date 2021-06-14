@@ -70,13 +70,13 @@
       }
     },
     "/v1/solutions/{solution_id}": {
-      "get": {
-        "operationId": "OcpSolutionApi_DescribeSolutionV1",
+      "delete": {
+        "operationId": "OcpSolutionApi_RemoveSolutionV1",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiDescribeSolutionV1Response"
+              "$ref": "#/definitions/apiRemoveSolutionV1Response"
             }
           },
           "default": {
@@ -99,13 +99,13 @@
           "OcpSolutionApi"
         ]
       },
-      "delete": {
-        "operationId": "OcpSolutionApi_RemoveSolutionV1",
+      "post": {
+        "operationId": "OcpSolutionApi_UpdateSolutionVerdictV1",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiRemoveSolutionV1Response"
+              "$ref": "#/definitions/apiUpdateSolutionVerdictV1Response"
             }
           },
           "default": {
@@ -151,14 +151,6 @@
         }
       }
     },
-    "apiDescribeSolutionV1Response": {
-      "type": "object",
-      "properties": {
-        "solution": {
-          "$ref": "#/definitions/apiSolution"
-        }
-      }
-    },
     "apiListSolutionsV1Response": {
       "type": "object",
       "properties": {
@@ -175,6 +167,9 @@
       "properties": {
         "found": {
           "type": "boolean"
+        },
+        "success": {
+          "type": "boolean"
         }
       }
     },
@@ -189,6 +184,14 @@
           "type": "string",
           "format": "uint64"
         },
+        "verdict": {
+          "$ref": "#/definitions/apiVerdict"
+        }
+      }
+    },
+    "apiUpdateSolutionVerdictV1Response": {
+      "type": "object",
+      "properties": {
         "verdict": {
           "$ref": "#/definitions/apiVerdict"
         }

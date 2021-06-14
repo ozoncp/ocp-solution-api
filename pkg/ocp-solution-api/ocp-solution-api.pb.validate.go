@@ -16,6 +16,8 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
+
+	ocp_verdict_api "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api"
 )
 
 // ensure the imports are used
@@ -31,6 +33,8 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
+
+	_ = ocp_verdict_api.Verdict_Status(0)
 )
 
 // Validate checks the field values on CreateSolutionV1Request with the rules
@@ -39,13 +43,6 @@ var (
 func (m *CreateSolutionV1Request) Validate() error {
 	if m == nil {
 		return nil
-	}
-
-	if m.GetSolutionId() <= 0 {
-		return CreateSolutionV1RequestValidationError{
-			field:  "SolutionId",
-			reason: "value must be greater than 0",
-		}
 	}
 
 	if m.GetIssueId() <= 0 {
@@ -344,27 +341,34 @@ var _ interface {
 	ErrorName() string
 } = ListSolutionsV1ResponseValidationError{}
 
-// Validate checks the field values on DescribeSolutionV1Request with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on UpdateSolutionVerdictV1Request with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
-func (m *DescribeSolutionV1Request) Validate() error {
+func (m *UpdateSolutionVerdictV1Request) Validate() error {
 	if m == nil {
 		return nil
 	}
 
 	if m.GetSolutionId() <= 0 {
-		return DescribeSolutionV1RequestValidationError{
+		return UpdateSolutionVerdictV1RequestValidationError{
 			field:  "SolutionId",
 			reason: "value must be greater than 0",
 		}
 	}
 
+	// no validation rules for UserId
+
+	// no validation rules for Status
+
+	// no validation rules for Comment
+
 	return nil
 }
 
-// DescribeSolutionV1RequestValidationError is the validation error returned by
-// DescribeSolutionV1Request.Validate if the designated constraints aren't met.
-type DescribeSolutionV1RequestValidationError struct {
+// UpdateSolutionVerdictV1RequestValidationError is the validation error
+// returned by UpdateSolutionVerdictV1Request.Validate if the designated
+// constraints aren't met.
+type UpdateSolutionVerdictV1RequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -372,24 +376,24 @@ type DescribeSolutionV1RequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e DescribeSolutionV1RequestValidationError) Field() string { return e.field }
+func (e UpdateSolutionVerdictV1RequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DescribeSolutionV1RequestValidationError) Reason() string { return e.reason }
+func (e UpdateSolutionVerdictV1RequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DescribeSolutionV1RequestValidationError) Cause() error { return e.cause }
+func (e UpdateSolutionVerdictV1RequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DescribeSolutionV1RequestValidationError) Key() bool { return e.key }
+func (e UpdateSolutionVerdictV1RequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DescribeSolutionV1RequestValidationError) ErrorName() string {
-	return "DescribeSolutionV1RequestValidationError"
+func (e UpdateSolutionVerdictV1RequestValidationError) ErrorName() string {
+	return "UpdateSolutionVerdictV1RequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e DescribeSolutionV1RequestValidationError) Error() string {
+func (e UpdateSolutionVerdictV1RequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -401,14 +405,14 @@ func (e DescribeSolutionV1RequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDescribeSolutionV1Request.%s: %s%s",
+		"invalid %sUpdateSolutionVerdictV1Request.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DescribeSolutionV1RequestValidationError{}
+var _ error = UpdateSolutionVerdictV1RequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -416,20 +420,20 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DescribeSolutionV1RequestValidationError{}
+} = UpdateSolutionVerdictV1RequestValidationError{}
 
-// Validate checks the field values on DescribeSolutionV1Response with the
+// Validate checks the field values on UpdateSolutionVerdictV1Response with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
-func (m *DescribeSolutionV1Response) Validate() error {
+func (m *UpdateSolutionVerdictV1Response) Validate() error {
 	if m == nil {
 		return nil
 	}
 
-	if v, ok := interface{}(m.GetSolution()).(interface{ Validate() error }); ok {
+	if v, ok := interface{}(m.GetVerdict()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return DescribeSolutionV1ResponseValidationError{
-				field:  "Solution",
+			return UpdateSolutionVerdictV1ResponseValidationError{
+				field:  "Verdict",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -439,9 +443,10 @@ func (m *DescribeSolutionV1Response) Validate() error {
 	return nil
 }
 
-// DescribeSolutionV1ResponseValidationError is the validation error returned
-// by DescribeSolutionV1Response.Validate if the designated constraints aren't met.
-type DescribeSolutionV1ResponseValidationError struct {
+// UpdateSolutionVerdictV1ResponseValidationError is the validation error
+// returned by UpdateSolutionVerdictV1Response.Validate if the designated
+// constraints aren't met.
+type UpdateSolutionVerdictV1ResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -449,24 +454,24 @@ type DescribeSolutionV1ResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e DescribeSolutionV1ResponseValidationError) Field() string { return e.field }
+func (e UpdateSolutionVerdictV1ResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DescribeSolutionV1ResponseValidationError) Reason() string { return e.reason }
+func (e UpdateSolutionVerdictV1ResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DescribeSolutionV1ResponseValidationError) Cause() error { return e.cause }
+func (e UpdateSolutionVerdictV1ResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DescribeSolutionV1ResponseValidationError) Key() bool { return e.key }
+func (e UpdateSolutionVerdictV1ResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DescribeSolutionV1ResponseValidationError) ErrorName() string {
-	return "DescribeSolutionV1ResponseValidationError"
+func (e UpdateSolutionVerdictV1ResponseValidationError) ErrorName() string {
+	return "UpdateSolutionVerdictV1ResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e DescribeSolutionV1ResponseValidationError) Error() string {
+func (e UpdateSolutionVerdictV1ResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -478,14 +483,14 @@ func (e DescribeSolutionV1ResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDescribeSolutionV1Response.%s: %s%s",
+		"invalid %sUpdateSolutionVerdictV1Response.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DescribeSolutionV1ResponseValidationError{}
+var _ error = UpdateSolutionVerdictV1ResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -493,7 +498,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DescribeSolutionV1ResponseValidationError{}
+} = UpdateSolutionVerdictV1ResponseValidationError{}
 
 // Validate checks the field values on RemoveSolutionV1Request with the rules
 // defined in the proto definition for this message. If any rules are
@@ -578,6 +583,8 @@ func (m *RemoveSolutionV1Response) Validate() error {
 	}
 
 	// no validation rules for Found
+
+	// no validation rules for Success
 
 	return nil
 }

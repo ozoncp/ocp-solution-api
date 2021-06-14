@@ -2,8 +2,8 @@ package api
 
 import (
 	"context"
-	"github.com/rs/zerolog/log"
 	"encoding/json"
+	"github.com/rs/zerolog/log"
 
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"
 )
@@ -34,13 +34,13 @@ func (a *ocpSolutionApi) ListSolutionsV1(
 	return &desc.ListSolutionsV1Response{}, nil
 }
 
-func (a *ocpSolutionApi) DescribeSolutionV1(
+func (a *ocpSolutionApi) UpdateSolutionVerdictV1(
 	ctx context.Context,
-	req *desc.DescribeSolutionV1Request,
-) (*desc.DescribeSolutionV1Response, error) {
+	req *desc.UpdateSolutionVerdictV1Request,
+) (*desc.UpdateSolutionVerdictV1Response, error) {
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
-	return &desc.DescribeSolutionV1Response{}, nil
+	return &desc.UpdateSolutionVerdictV1Response{}, nil
 }
 
 func (a *ocpSolutionApi) RemoveSolutionV1(

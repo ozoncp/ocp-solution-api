@@ -4,9 +4,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
+	"fmt"
 	"log"
 	"net"
-	"fmt"
 
 	api "github.com/ozoncp/ocp-solution-api/internal/api"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"

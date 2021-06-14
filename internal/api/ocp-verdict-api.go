@@ -31,12 +31,12 @@ func (a *ocpVerdictApi) ListVerdictsV1(
 	return &desc.ListVerdictsV1Response{}, nil
 }
 
-func (a *ocpVerdictApi) DescribeVerdictV1(
+func (a *ocpVerdictApi) UpdateVerdictV1(
 	ctx context.Context,
-	req *desc.DescribeVerdictV1Request,
-) (*desc.DescribeVerdictV1Response, error) {
+	req *desc.UpdateVerdictV1Request,
+) (*desc.UpdateVerdictV1Response, error) {
 	log.Info().Msg(req.String())
-	return &desc.DescribeVerdictV1Response{}, nil
+	return &desc.UpdateVerdictV1Response{}, nil
 }
 
 func (a *ocpVerdictApi) RemoveVerdictV1(

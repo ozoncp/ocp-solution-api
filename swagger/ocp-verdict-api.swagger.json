@@ -71,12 +71,12 @@
     },
     "/v1/verdicts/{verdict_id}": {
       "get": {
-        "operationId": "OcpVerdictApi_DescribeVerdictV1",
+        "operationId": "OcpVerdictApi_UpdateVerdictV1",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiDescribeVerdictV1Response"
+              "$ref": "#/definitions/apiUpdateVerdictV1Response"
             }
           },
           "default": {
@@ -93,6 +93,34 @@
             "required": true,
             "type": "string",
             "format": "uint64"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "InProgress",
+              "Passed",
+              "Failed",
+              "SyntaxError",
+              "CompilationError",
+              "Dropped"
+            ],
+            "default": "InProgress"
+          },
+          {
+            "name": "comment",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -151,14 +179,6 @@
         }
       }
     },
-    "apiDescribeVerdictV1Response": {
-      "type": "object",
-      "properties": {
-        "verdict": {
-          "$ref": "#/definitions/apiVerdict"
-        }
-      }
-    },
     "apiListVerdictsV1Response": {
       "type": "object",
       "properties": {
@@ -175,6 +195,14 @@
       "properties": {
         "found": {
           "type": "boolean"
+        }
+      }
+    },
+    "apiUpdateVerdictV1Response": {
+      "type": "object",
+      "properties": {
+        "verdict": {
+          "$ref": "#/definitions/apiVerdict"
         }
       }
     },

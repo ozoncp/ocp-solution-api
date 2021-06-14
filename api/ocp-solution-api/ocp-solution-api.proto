@@ -20,9 +20,9 @@ service OcpSolutionApi {
     };
   }
 
-  rpc DescribeSolutionV1(DescribeSolutionV1Request) returns (DescribeSolutionV1Response) {
+  rpc UpdateSolutionVerdictV1(UpdateSolutionVerdictV1Request) returns (UpdateSolutionVerdictV1Response) {
     option (google.api.http) = {
-      get: "/v1/solutions/{solution_id}"
+      post: "/v1/solutions/{solution_id}"
     };
   }
 
@@ -34,8 +34,7 @@ service OcpSolutionApi {
 }
 
 message CreateSolutionV1Request {
-  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
-  uint64 issue_id = 2 [(validate.rules).uint64.gt = 0];
+  uint64 issue_id = 1 [(validate.rules).uint64.gt = 0];
 }
 
 message CreateSolutionV1Response {
@@ -51,12 +50,15 @@ message ListSolutionsV1Response {
   repeated Solution solutions = 1;
 }
 
-message DescribeSolutionV1Request {
+message UpdateSolutionVerdictV1Request {
   uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
+  uint64 user_id = 2;
+  ocp.verdict.api.Verdict.Status status = 3;
+  string comment = 4;
 }
 
-message DescribeSolutionV1Response {
-  Solution solution = 1;
+message UpdateSolutionVerdictV1Response {
+  ocp.verdict.api.Verdict verdict = 1;
 }
 
 message RemoveSolutionV1Request {
@@ -65,6 +67,7 @@ message RemoveSolutionV1Request {
 
 message RemoveSolutionV1Response {
   bool found = 1;
+  bool success = 2;
 }
 
 message Solution {

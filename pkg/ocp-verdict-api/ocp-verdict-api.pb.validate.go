@@ -344,27 +344,33 @@ var _ interface {
 	ErrorName() string
 } = ListVerdictsV1ResponseValidationError{}
 
-// Validate checks the field values on DescribeVerdictV1Request with the rules
+// Validate checks the field values on UpdateVerdictV1Request with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
-func (m *DescribeVerdictV1Request) Validate() error {
+func (m *UpdateVerdictV1Request) Validate() error {
 	if m == nil {
 		return nil
 	}
 
 	if m.GetVerdictId() <= 0 {
-		return DescribeVerdictV1RequestValidationError{
+		return UpdateVerdictV1RequestValidationError{
 			field:  "VerdictId",
 			reason: "value must be greater than 0",
 		}
 	}
 
+	// no validation rules for UserId
+
+	// no validation rules for Status
+
+	// no validation rules for Comment
+
 	return nil
 }
 
-// DescribeVerdictV1RequestValidationError is the validation error returned by
-// DescribeVerdictV1Request.Validate if the designated constraints aren't met.
-type DescribeVerdictV1RequestValidationError struct {
+// UpdateVerdictV1RequestValidationError is the validation error returned by
+// UpdateVerdictV1Request.Validate if the designated constraints aren't met.
+type UpdateVerdictV1RequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -372,24 +378,24 @@ type DescribeVerdictV1RequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e DescribeVerdictV1RequestValidationError) Field() string { return e.field }
+func (e UpdateVerdictV1RequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DescribeVerdictV1RequestValidationError) Reason() string { return e.reason }
+func (e UpdateVerdictV1RequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DescribeVerdictV1RequestValidationError) Cause() error { return e.cause }
+func (e UpdateVerdictV1RequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DescribeVerdictV1RequestValidationError) Key() bool { return e.key }
+func (e UpdateVerdictV1RequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DescribeVerdictV1RequestValidationError) ErrorName() string {
-	return "DescribeVerdictV1RequestValidationError"
+func (e UpdateVerdictV1RequestValidationError) ErrorName() string {
+	return "UpdateVerdictV1RequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e DescribeVerdictV1RequestValidationError) Error() string {
+func (e UpdateVerdictV1RequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -401,14 +407,14 @@ func (e DescribeVerdictV1RequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDescribeVerdictV1Request.%s: %s%s",
+		"invalid %sUpdateVerdictV1Request.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DescribeVerdictV1RequestValidationError{}
+var _ error = UpdateVerdictV1RequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -416,19 +422,19 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DescribeVerdictV1RequestValidationError{}
+} = UpdateVerdictV1RequestValidationError{}
 
-// Validate checks the field values on DescribeVerdictV1Response with the rules
+// Validate checks the field values on UpdateVerdictV1Response with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
-func (m *DescribeVerdictV1Response) Validate() error {
+func (m *UpdateVerdictV1Response) Validate() error {
 	if m == nil {
 		return nil
 	}
 
 	if v, ok := interface{}(m.GetVerdict()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return DescribeVerdictV1ResponseValidationError{
+			return UpdateVerdictV1ResponseValidationError{
 				field:  "Verdict",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -439,9 +445,9 @@ func (m *DescribeVerdictV1Response) Validate() error {
 	return nil
 }
 
-// DescribeVerdictV1ResponseValidationError is the validation error returned by
-// DescribeVerdictV1Response.Validate if the designated constraints aren't met.
-type DescribeVerdictV1ResponseValidationError struct {
+// UpdateVerdictV1ResponseValidationError is the validation error returned by
+// UpdateVerdictV1Response.Validate if the designated constraints aren't met.
+type UpdateVerdictV1ResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -449,24 +455,24 @@ type DescribeVerdictV1ResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e DescribeVerdictV1ResponseValidationError) Field() string { return e.field }
+func (e UpdateVerdictV1ResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DescribeVerdictV1ResponseValidationError) Reason() string { return e.reason }
+func (e UpdateVerdictV1ResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DescribeVerdictV1ResponseValidationError) Cause() error { return e.cause }
+func (e UpdateVerdictV1ResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DescribeVerdictV1ResponseValidationError) Key() bool { return e.key }
+func (e UpdateVerdictV1ResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DescribeVerdictV1ResponseValidationError) ErrorName() string {
-	return "DescribeVerdictV1ResponseValidationError"
+func (e UpdateVerdictV1ResponseValidationError) ErrorName() string {
+	return "UpdateVerdictV1ResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e DescribeVerdictV1ResponseValidationError) Error() string {
+func (e UpdateVerdictV1ResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -478,14 +484,14 @@ func (e DescribeVerdictV1ResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDescribeVerdictV1Response.%s: %s%s",
+		"invalid %sUpdateVerdictV1Response.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DescribeVerdictV1ResponseValidationError{}
+var _ error = UpdateVerdictV1ResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -493,7 +499,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DescribeVerdictV1ResponseValidationError{}
+} = UpdateVerdictV1ResponseValidationError{}
 
 // Validate checks the field values on RemoveVerdictV1Request with the rules
 // defined in the proto definition for this message. If any rules are
