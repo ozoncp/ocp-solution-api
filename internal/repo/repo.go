@@ -13,10 +13,6 @@ const (
 	verdictsTableName  = "verdicts"
 )
 
-var (
-	psql = sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
-)
-
 type Repo interface {
 	AddSolution(ctx context.Context, issueId uint64) (*models.Solution, error)
 	AddSolutions(ctx context.Context, issueIds []uint64) error
@@ -34,11 +30,12 @@ type repo struct {
 }
 
 func (r *repo) AddSolution(ctx context.Context, issueId uint64) (*models.Solution, error) {
-	query := psql.Insert(solutionsTableName).
+	query := sq.Insert(solutionsTableName).
 		Columns("issue_id").
 		Values(issueId).
 		Suffix(`RETURNING "id"`).
-		RunWith(r.db)
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
 
 	var solutionId uint64 = 0
 	err := query.QueryRowContext(ctx).Scan(&solutionId)
@@ -47,10 +44,11 @@ func (r *repo) AddSolution(ctx context.Context, issueId uint64) (*models.Solutio
 }
 
 func (r *repo) AddSolutions(ctx context.Context, issueIds []uint64) error {
-	query := psql.Insert(solutionsTableName).
+	query := sq.Insert(solutionsTableName).
 		Columns("issue_id").
 		Suffix(`RETURNING "id"`).
-		RunWith(r.db)
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
 
 	for _, issueId := range issueIds {
 		query = query.Values(issueId)
@@ -61,9 +59,10 @@ func (r *repo) AddSolutions(ctx context.Context, issueIds []uint64) error {
 }
 
 func (r *repo) RemoveSolution(ctx context.Context, solutionId uint64) error {
-	query := psql.Delete(solutionsTableName).
+	query := sq.Delete(solutionsTableName).
 		Where(sq.Eq{"id": solutionId}).
-		RunWith(r.db)
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
 
 	// TODO: remove verdict
 
@@ -72,10 +71,11 @@ func (r *repo) RemoveSolution(ctx context.Context, solutionId uint64) error {
 }
 
 func (r *repo) UpdateSolution(ctx context.Context, solution models.Solution) error {
-	query := psql.Update(solutionsTableName).
+	query := sq.Update(solutionsTableName).
 		Set("issue_id", solution.IssueId()).
 		Where(sq.Eq{"id": solution.Id()}).
-		RunWith(r.db)
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
 
 	// TODO: update verdict
 
@@ -84,11 +84,12 @@ func (r *repo) UpdateSolution(ctx context.Context, solution models.Solution) err
 }
 
 func (r *repo) ListSolutions(ctx context.Context, limit, offset uint64) ([]*models.Solution, error) {
-	query := psql.Select("id", "issueId").
+	query := sq.Select("id", "issueId").
 		From(solutionsTableName).
 		RunWith(r.db).
 		Limit(limit).
-		Offset(offset)
+		Offset(offset).
+		PlaceholderFormat(sq.Dollar)
 
 	rows, err := query.QueryContext(ctx)
 	if err != nil {

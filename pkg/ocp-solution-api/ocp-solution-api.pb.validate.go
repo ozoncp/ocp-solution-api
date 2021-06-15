@@ -16,8 +16,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	ocp_verdict_api "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api"
 )
 
 // ensure the imports are used
@@ -33,8 +31,6 @@ var (
 	_ = (*url.URL)(nil)
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
-
-	_ = ocp_verdict_api.Verdict_Status(0)
 )
 
 // Validate checks the field values on CreateSolutionV1Request with the rules
@@ -341,99 +337,18 @@ var _ interface {
 	ErrorName() string
 } = ListSolutionsV1ResponseValidationError{}
 
-// Validate checks the field values on UpdateSolutionVerdictV1Request with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on UpdateSolutionV1Request with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, an error is returned.
-func (m *UpdateSolutionVerdictV1Request) Validate() error {
+func (m *UpdateSolutionV1Request) Validate() error {
 	if m == nil {
 		return nil
 	}
 
-	if m.GetSolutionId() <= 0 {
-		return UpdateSolutionVerdictV1RequestValidationError{
-			field:  "SolutionId",
-			reason: "value must be greater than 0",
-		}
-	}
-
-	// no validation rules for UserId
-
-	// no validation rules for Status
-
-	// no validation rules for Comment
-
-	return nil
-}
-
-// UpdateSolutionVerdictV1RequestValidationError is the validation error
-// returned by UpdateSolutionVerdictV1Request.Validate if the designated
-// constraints aren't met.
-type UpdateSolutionVerdictV1RequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e UpdateSolutionVerdictV1RequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e UpdateSolutionVerdictV1RequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e UpdateSolutionVerdictV1RequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e UpdateSolutionVerdictV1RequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e UpdateSolutionVerdictV1RequestValidationError) ErrorName() string {
-	return "UpdateSolutionVerdictV1RequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e UpdateSolutionVerdictV1RequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sUpdateSolutionVerdictV1Request.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = UpdateSolutionVerdictV1RequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = UpdateSolutionVerdictV1RequestValidationError{}
-
-// Validate checks the field values on UpdateSolutionVerdictV1Response with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, an error is returned.
-func (m *UpdateSolutionVerdictV1Response) Validate() error {
-	if m == nil {
-		return nil
-	}
-
-	if v, ok := interface{}(m.GetVerdict()).(interface{ Validate() error }); ok {
+	if v, ok := interface{}(m.GetSolution()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return UpdateSolutionVerdictV1ResponseValidationError{
-				field:  "Verdict",
+			return UpdateSolutionV1RequestValidationError{
+				field:  "Solution",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -443,10 +358,9 @@ func (m *UpdateSolutionVerdictV1Response) Validate() error {
 	return nil
 }
 
-// UpdateSolutionVerdictV1ResponseValidationError is the validation error
-// returned by UpdateSolutionVerdictV1Response.Validate if the designated
-// constraints aren't met.
-type UpdateSolutionVerdictV1ResponseValidationError struct {
+// UpdateSolutionV1RequestValidationError is the validation error returned by
+// UpdateSolutionV1Request.Validate if the designated constraints aren't met.
+type UpdateSolutionV1RequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -454,24 +368,24 @@ type UpdateSolutionVerdictV1ResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateSolutionVerdictV1ResponseValidationError) Field() string { return e.field }
+func (e UpdateSolutionV1RequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateSolutionVerdictV1ResponseValidationError) Reason() string { return e.reason }
+func (e UpdateSolutionV1RequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateSolutionVerdictV1ResponseValidationError) Cause() error { return e.cause }
+func (e UpdateSolutionV1RequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateSolutionVerdictV1ResponseValidationError) Key() bool { return e.key }
+func (e UpdateSolutionV1RequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateSolutionVerdictV1ResponseValidationError) ErrorName() string {
-	return "UpdateSolutionVerdictV1ResponseValidationError"
+func (e UpdateSolutionV1RequestValidationError) ErrorName() string {
+	return "UpdateSolutionV1RequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UpdateSolutionVerdictV1ResponseValidationError) Error() string {
+func (e UpdateSolutionV1RequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -483,14 +397,14 @@ func (e UpdateSolutionVerdictV1ResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateSolutionVerdictV1Response.%s: %s%s",
+		"invalid %sUpdateSolutionV1Request.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateSolutionVerdictV1ResponseValidationError{}
+var _ error = UpdateSolutionV1RequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -498,7 +412,76 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateSolutionVerdictV1ResponseValidationError{}
+} = UpdateSolutionV1RequestValidationError{}
+
+// Validate checks the field values on UpdateSolutionV1Response with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *UpdateSolutionV1Response) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Success
+
+	return nil
+}
+
+// UpdateSolutionV1ResponseValidationError is the validation error returned by
+// UpdateSolutionV1Response.Validate if the designated constraints aren't met.
+type UpdateSolutionV1ResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateSolutionV1ResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateSolutionV1ResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateSolutionV1ResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateSolutionV1ResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateSolutionV1ResponseValidationError) ErrorName() string {
+	return "UpdateSolutionV1ResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateSolutionV1ResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateSolutionV1Response.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateSolutionV1ResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateSolutionV1ResponseValidationError{}
 
 // Validate checks the field values on RemoveSolutionV1Request with the rules
 // defined in the proto definition for this message. If any rules are
@@ -581,8 +564,6 @@ func (m *RemoveSolutionV1Response) Validate() error {
 	if m == nil {
 		return nil
 	}
-
-	// no validation rules for Found
 
 	// no validation rules for Success
 

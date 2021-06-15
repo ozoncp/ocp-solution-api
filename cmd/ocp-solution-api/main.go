@@ -8,7 +8,9 @@ import (
 	"log"
 	"net"
 
+	"github.com/jmoiron/sqlx"
 	api "github.com/ozoncp/ocp-solution-api/internal/api"
+	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"
 )
 
@@ -24,7 +26,14 @@ func run() error {
 
 	s := grpc.NewServer()
 	reflection.Register(s)
-	desc.RegisterOcpSolutionApiServer(s, api.NewOcpSolutionApi())
+	// this Pings the database trying to connect
+	// use sqlx.Open() for sql.Open() semantics
+	db, err := sqlx.Connect("postgres", "user=postgres dbname=ozoncp sslmode=disable")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	repo := repo.NewRepo(*db)
+	desc.RegisterOcpSolutionApiServer(s, api.NewOcpSolutionApi(repo))
 
 	fmt.Printf("server is listening on localhost%v\n", grpcPort)
 	if err := s.Serve(listen); err != nil {

@@ -11,6 +11,28 @@
     "application/json"
   ],
   "paths": {
+    "/v1/solution": {
+      "post": {
+        "operationId": "OcpSolutionApi_UpdateSolutionV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateSolutionV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "OcpSolutionApi"
+        ]
+      }
+    },
     "/v1/solutions": {
       "get": {
         "operationId": "OcpSolutionApi_ListSolutionsV1",
@@ -47,26 +69,6 @@
         "tags": [
           "OcpSolutionApi"
         ]
-      },
-      "post": {
-        "operationId": "OcpSolutionApi_CreateSolutionV1",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiCreateSolutionV1Response"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "tags": [
-          "OcpSolutionApi"
-        ]
       }
     },
     "/v1/solutions/{solution_id}": {
@@ -77,35 +79,6 @@
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/apiRemoveSolutionV1Response"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "solution_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "OcpSolutionApi"
-        ]
-      },
-      "post": {
-        "operationId": "OcpSolutionApi_UpdateSolutionVerdictV1",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiUpdateSolutionVerdictV1Response"
             }
           },
           "default": {
@@ -165,9 +138,6 @@
     "apiRemoveSolutionV1Response": {
       "type": "object",
       "properties": {
-        "found": {
-          "type": "boolean"
-        },
         "success": {
           "type": "boolean"
         }
@@ -189,11 +159,11 @@
         }
       }
     },
-    "apiUpdateSolutionVerdictV1Response": {
+    "apiUpdateSolutionV1Response": {
       "type": "object",
       "properties": {
-        "verdict": {
-          "$ref": "#/definitions/apiVerdict"
+        "success": {
+          "type": "boolean"
         }
       }
     },

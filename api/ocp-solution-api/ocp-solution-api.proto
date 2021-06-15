@@ -10,7 +10,7 @@ option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api;ocp
 service OcpSolutionApi {
   rpc CreateSolutionV1(CreateSolutionV1Request) returns (CreateSolutionV1Response) {
     option (google.api.http) = {
-      post: "/v1/solutions"
+      post: "/v1/solution"
     };
   }
 
@@ -20,9 +20,9 @@ service OcpSolutionApi {
     };
   }
 
-  rpc UpdateSolutionVerdictV1(UpdateSolutionVerdictV1Request) returns (UpdateSolutionVerdictV1Response) {
+  rpc UpdateSolutionV1(UpdateSolutionV1Request) returns (UpdateSolutionV1Response) {
     option (google.api.http) = {
-      post: "/v1/solutions/{solution_id}"
+      post: "/v1/solution"
     };
   }
 
@@ -50,15 +50,12 @@ message ListSolutionsV1Response {
   repeated Solution solutions = 1;
 }
 
-message UpdateSolutionVerdictV1Request {
-  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
-  uint64 user_id = 2;
-  ocp.verdict.api.Verdict.Status status = 3;
-  string comment = 4;
+message UpdateSolutionV1Request {
+  Solution solution = 1;
 }
 
-message UpdateSolutionVerdictV1Response {
-  ocp.verdict.api.Verdict verdict = 1;
+message UpdateSolutionV1Response {
+  bool success = 1;
 }
 
 message RemoveSolutionV1Request {
@@ -66,8 +63,7 @@ message RemoveSolutionV1Request {
 }
 
 message RemoveSolutionV1Response {
-  bool found = 1;
-  bool success = 2;
+  bool success = 1;
 }
 
 message Solution {

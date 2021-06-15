@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type OcpSolutionApiClient interface {
 	CreateSolutionV1(ctx context.Context, in *CreateSolutionV1Request, opts ...grpc.CallOption) (*CreateSolutionV1Response, error)
 	ListSolutionsV1(ctx context.Context, in *ListSolutionsV1Request, opts ...grpc.CallOption) (*ListSolutionsV1Response, error)
-	UpdateSolutionVerdictV1(ctx context.Context, in *UpdateSolutionVerdictV1Request, opts ...grpc.CallOption) (*UpdateSolutionVerdictV1Response, error)
+	UpdateSolutionV1(ctx context.Context, in *UpdateSolutionV1Request, opts ...grpc.CallOption) (*UpdateSolutionV1Response, error)
 	RemoveSolutionV1(ctx context.Context, in *RemoveSolutionV1Request, opts ...grpc.CallOption) (*RemoveSolutionV1Response, error)
 }
 
@@ -50,9 +50,9 @@ func (c *ocpSolutionApiClient) ListSolutionsV1(ctx context.Context, in *ListSolu
 	return out, nil
 }
 
-func (c *ocpSolutionApiClient) UpdateSolutionVerdictV1(ctx context.Context, in *UpdateSolutionVerdictV1Request, opts ...grpc.CallOption) (*UpdateSolutionVerdictV1Response, error) {
-	out := new(UpdateSolutionVerdictV1Response)
-	err := c.cc.Invoke(ctx, "/ocp.solution.api.OcpSolutionApi/UpdateSolutionVerdictV1", in, out, opts...)
+func (c *ocpSolutionApiClient) UpdateSolutionV1(ctx context.Context, in *UpdateSolutionV1Request, opts ...grpc.CallOption) (*UpdateSolutionV1Response, error) {
+	out := new(UpdateSolutionV1Response)
+	err := c.cc.Invoke(ctx, "/ocp.solution.api.OcpSolutionApi/UpdateSolutionV1", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (c *ocpSolutionApiClient) RemoveSolutionV1(ctx context.Context, in *RemoveS
 type OcpSolutionApiServer interface {
 	CreateSolutionV1(context.Context, *CreateSolutionV1Request) (*CreateSolutionV1Response, error)
 	ListSolutionsV1(context.Context, *ListSolutionsV1Request) (*ListSolutionsV1Response, error)
-	UpdateSolutionVerdictV1(context.Context, *UpdateSolutionVerdictV1Request) (*UpdateSolutionVerdictV1Response, error)
+	UpdateSolutionV1(context.Context, *UpdateSolutionV1Request) (*UpdateSolutionV1Response, error)
 	RemoveSolutionV1(context.Context, *RemoveSolutionV1Request) (*RemoveSolutionV1Response, error)
 	mustEmbedUnimplementedOcpSolutionApiServer()
 }
@@ -89,8 +89,8 @@ func (UnimplementedOcpSolutionApiServer) CreateSolutionV1(context.Context, *Crea
 func (UnimplementedOcpSolutionApiServer) ListSolutionsV1(context.Context, *ListSolutionsV1Request) (*ListSolutionsV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListSolutionsV1 not implemented")
 }
-func (UnimplementedOcpSolutionApiServer) UpdateSolutionVerdictV1(context.Context, *UpdateSolutionVerdictV1Request) (*UpdateSolutionVerdictV1Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateSolutionVerdictV1 not implemented")
+func (UnimplementedOcpSolutionApiServer) UpdateSolutionV1(context.Context, *UpdateSolutionV1Request) (*UpdateSolutionV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSolutionV1 not implemented")
 }
 func (UnimplementedOcpSolutionApiServer) RemoveSolutionV1(context.Context, *RemoveSolutionV1Request) (*RemoveSolutionV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveSolutionV1 not implemented")
@@ -144,20 +144,20 @@ func _OcpSolutionApi_ListSolutionsV1_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OcpSolutionApi_UpdateSolutionVerdictV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateSolutionVerdictV1Request)
+func _OcpSolutionApi_UpdateSolutionV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSolutionV1Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OcpSolutionApiServer).UpdateSolutionVerdictV1(ctx, in)
+		return srv.(OcpSolutionApiServer).UpdateSolutionV1(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ocp.solution.api.OcpSolutionApi/UpdateSolutionVerdictV1",
+		FullMethod: "/ocp.solution.api.OcpSolutionApi/UpdateSolutionV1",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OcpSolutionApiServer).UpdateSolutionVerdictV1(ctx, req.(*UpdateSolutionVerdictV1Request))
+		return srv.(OcpSolutionApiServer).UpdateSolutionV1(ctx, req.(*UpdateSolutionV1Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -196,8 +196,8 @@ var OcpSolutionApi_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OcpSolutionApi_ListSolutionsV1_Handler,
 		},
 		{
-			MethodName: "UpdateSolutionVerdictV1",
-			Handler:    _OcpSolutionApi_UpdateSolutionVerdictV1_Handler,
+			MethodName: "UpdateSolutionV1",
+			Handler:    _OcpSolutionApi_UpdateSolutionV1_Handler,
 		},
 		{
 			MethodName: "RemoveSolutionV1",
