@@ -1,7 +1,9 @@
 package flusher_test
 
 import (
+	"context"
 	"errors"
+
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -78,7 +80,7 @@ var _ = Describe("Flusher", func() {
 			batchSize = 2
 			solutions = []models.Solution{}
 
-			mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(nil).Times(0)
+			mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Any()).Return(nil).Times(0)
 		})
 
 		It("", func() {
@@ -93,7 +95,7 @@ var _ = Describe("Flusher", func() {
 			batchSize = 2
 			solutions = []models.Solution{{}, {}, {}}
 
-			mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(nil).Times(2)
+			mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Any()).Return(nil).Times(2)
 		})
 
 		It("", func() {
@@ -116,8 +118,8 @@ var _ = Describe("Flusher", func() {
 			repoError = errors.New("out of memory")
 
 			gomock.InOrder(
-				mockRepo.EXPECT().AddSolutions(gomock.Len(batchSize)).Return(nil),
-				mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(repoError),
+				mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Len(batchSize)).Return(nil),
+				mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Any()).Return(repoError),
 			)
 		})
 

@@ -1,8 +1,9 @@
 MODELS = solution verdict
+MOCK_PACKAGES = flusher saver
 OS=$(shell uname | tr A-Z a-z)
 
 .PHONY: build
-build: .deps .vendor-proto .generate .build
+build: .generate-mocks .deps .vendor-proto .generate-api .build lint
 
 .PHONY: .build
 .build:
@@ -10,8 +11,8 @@ build: .deps .vendor-proto .generate .build
 	CGO_ENABLED=0 GOOS=windows go build -o bin/ocp-solution-api cmd/ocp-solution-api/main.go
 	go mod tidy
 
-.PHONY: .generate
-.generate:
+.PHONY: .generate-api
+.generate-api:
 	mkdir -p swagger
 	for model in $(MODELS) ; do \
 		echo "generating $$model ..." ; \
@@ -47,6 +48,17 @@ vendor.protogen/github.com/envoyproxy:
 	mkdir -p vendor.protogen/github.com/envoyproxy
 	git clone https://github.com/envoyproxy/protoc-gen-validate vendor.protogen/github.com/envoyproxy/protoc-gen-validate
 
+.PHONY: .generate-mocks
+.generate-mocks:
+	for package in $(MOCK_PACKAGES) ; do \
+		cd internal/$$package ; \
+		ginkgo bootstrap ; \
+		rm -f $$package_test.go ; \
+		ginkgo generate $$package ; \
+		cd - ; \
+	done
+	go generate ./...
+
 .PHONY: .deps
 .deps:
 	ls go.mod || go mod init
@@ -60,3 +72,7 @@ vendor.protogen/github.com/envoyproxy:
 .PHONY: postgres
 postgres:
 	pg_ctl -D /usr/local/var/postgres start
+
+.PHONY: lint
+lint:
+	golangci-lint run

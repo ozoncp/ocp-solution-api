@@ -1,7 +1,9 @@
 package flusher
 
 import (
+	"context"
 	"fmt"
+
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	"github.com/ozoncp/ocp-solution-api/internal/utils"
@@ -24,7 +26,7 @@ func (f flusher) Flush(solutions []models.Solution) ([]models.Solution, error) {
 	}
 
 	for i, batch := range batches {
-		if err := f.repo.AddSolutions(batch); err != nil {
+		if err := f.repo.AddSolutions(context.Background(), batch); err != nil {
 			return solutions[i*f.batchSize:], err
 		}
 	}

@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 
@@ -10,12 +11,12 @@ import (
 
 const (
 	solutionsTableName = "solutions"
-	verdictsTableName  = "verdicts"
+	// verdictsTableName  = "verdicts"
 )
 
 type Repo interface {
-	AddSolution(ctx context.Context, issueId uint64) (*models.Solution, error)
-	AddSolutions(ctx context.Context, issueIds []uint64) error
+	AddSolution(ctx context.Context, solution models.Solution) (*models.Solution, error)
+	AddSolutions(ctx context.Context, solutions []models.Solution) error
 	RemoveSolution(ctx context.Context, solutionId uint64) error
 	UpdateSolution(ctx context.Context, solution models.Solution) error
 	ListSolutions(ctx context.Context, limit, offset uint64) ([]*models.Solution, error)
@@ -29,10 +30,10 @@ type repo struct {
 	db sqlx.DB
 }
 
-func (r *repo) AddSolution(ctx context.Context, issueId uint64) (*models.Solution, error) {
+func (r *repo) AddSolution(ctx context.Context, solution models.Solution) (*models.Solution, error) {
 	query := sq.Insert(solutionsTableName).
 		Columns("issue_id").
-		Values(issueId).
+		Values(solution.IssueId()).
 		Suffix(`RETURNING "id"`).
 		RunWith(r.db).
 		PlaceholderFormat(sq.Dollar)
@@ -40,18 +41,18 @@ func (r *repo) AddSolution(ctx context.Context, issueId uint64) (*models.Solutio
 	var solutionId uint64 = 0
 	err := query.QueryRowContext(ctx).Scan(&solutionId)
 
-	return models.NewSolution(solutionId, issueId), err
+	return models.NewSolution(solutionId, solution.IssueId()), err
 }
 
-func (r *repo) AddSolutions(ctx context.Context, issueIds []uint64) error {
+func (r *repo) AddSolutions(ctx context.Context, solutions []models.Solution) error {
 	query := sq.Insert(solutionsTableName).
 		Columns("issue_id").
 		Suffix(`RETURNING "id"`).
 		RunWith(r.db).
 		PlaceholderFormat(sq.Dollar)
 
-	for _, issueId := range issueIds {
-		query = query.Values(issueId)
+	for _, solution := range solutions {
+		query = query.Values(solution.IssueId())
 	}
 
 	_, err := query.ExecContext(ctx)

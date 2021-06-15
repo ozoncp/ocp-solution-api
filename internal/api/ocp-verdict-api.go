@@ -2,13 +2,14 @@ package api
 
 import (
 	"context"
+
 	"github.com/rs/zerolog/log"
 
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api"
 )
 
 const (
-	errVerdictNotFound = "verdict not found"
+// errVerdictNotFound = "verdict not found"
 )
 
 type ocpVerdictApi struct {

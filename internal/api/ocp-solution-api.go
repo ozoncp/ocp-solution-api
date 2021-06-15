@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	errSolutionNotFound = "solution not found"
+// errSolutionNotFound = "solution not found"
 )
 
 type ocpSolutionApi struct {
@@ -28,7 +28,7 @@ func (a *ocpSolutionApi) CreateSolutionV1(
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
 
-	solution, err := a.repo.AddSolution(ctx, req.IssueId)
+	solution, err := a.repo.AddSolution(ctx, *models.NewSolution(0, req.IssueId))
 
 	return &desc.CreateSolutionV1Response{
 		Solution: &desc.Solution{
