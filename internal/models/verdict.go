@@ -105,9 +105,13 @@ func (v *Verdict) UpdateStatus(status Status, comment string, userId uint64) {
 	v.UpdateTimestamp()
 }
 
+func (v *Verdict) ForceTimestamp(timestamp int64) {
+	v.timestamp = timestamp
+}
+
 // Status method helps to retrieve status, corresponding comment and moderator's id from Verdict
-func (v Verdict) Status() (Status, string, uint64) {
-	return v.status, v.comment, v.userId
+func (v Verdict) Status() (Status, string, uint64, int64) {
+	return v.status, v.comment, v.userId, v.timestamp
 }
 
 // SolutionId method helps to retrieve solutionId from Verdict

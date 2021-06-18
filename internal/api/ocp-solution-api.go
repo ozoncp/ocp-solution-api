@@ -34,7 +34,6 @@ func (a *ocpSolutionApi) CreateSolutionV1(
 		Solution: &desc.Solution{
 			SolutionId: solution.Id(),
 			IssueId:    solution.IssueId(),
-			Verdict:    nil,
 		},
 	}, err
 }
@@ -54,7 +53,6 @@ func (a *ocpSolutionApi) ListSolutionsV1(
 			respSolution := desc.Solution{
 				SolutionId: solution.Id(),
 				IssueId:    solution.IssueId(),
-				Verdict:    nil,
 			}
 			respSolutions = append(respSolutions, &respSolution)
 		}
@@ -74,7 +72,6 @@ func (a *ocpSolutionApi) UpdateSolutionV1(
 	log.Info().Msg(string(jsonStr))
 
 	solution := models.NewSolution(req.Solution.SolutionId, req.Solution.IssueId)
-	// TODO: update verdict
 	err := a.repo.UpdateSolution(ctx, *solution)
 
 	return &desc.UpdateSolutionV1Response{Success: err == nil}, err

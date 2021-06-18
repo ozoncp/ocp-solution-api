@@ -2,9 +2,10 @@ package models
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestVerdict_String(t *testing.T) {
@@ -115,7 +116,7 @@ func TestVerdict_UpdateStatus(t *testing.T) {
 
 func TestVerdict_Status(t *testing.T) {
 	ptr := NewVerdict(1, 2, Passed, "Great job!")
-	status, comment, userId := ptr.Status()
+	status, comment, userId, _ := ptr.Status()
 	assert.Equal(t, status, Passed)
 	assert.Equal(t, comment, "Great job!")
 	assert.Equal(t, userId, uint64(2))

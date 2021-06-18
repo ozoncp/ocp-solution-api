@@ -21,20 +21,19 @@ service OcpVerdictApi {
 
   rpc UpdateVerdictV1(UpdateVerdictV1Request) returns (UpdateVerdictV1Response) {
     option (google.api.http) = {
-      get: "/v1/verdicts/{verdict_id}"
+      get: "/v1/verdicts/{solution_id}"
     };
   }
 
   rpc RemoveVerdictV1(RemoveVerdictV1Request) returns (RemoveVerdictV1Response) {
     option (google.api.http) = {
-      delete: "/v1/verdicts/{verdict_id}"
+      delete: "/v1/verdicts/{solution_id}"
     };
   }
 }
 
 message CreateVerdictV1Request {
-  uint64 verdict_id = 1 [(validate.rules).uint64.gt = 0];
-  uint64 issue_id = 2 [(validate.rules).uint64.gt = 0];
+  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
 }
 
 message CreateVerdictV1Response {
@@ -51,22 +50,22 @@ message ListVerdictsV1Response {
 }
 
 message UpdateVerdictV1Request {
-  uint64 verdict_id = 1 [(validate.rules).uint64.gt = 0];
+  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
   uint64 user_id = 2;
   Verdict.Status status = 3;
   string comment = 4;
 }
 
 message UpdateVerdictV1Response {
-  Verdict verdict = 1;
+  bool success = 1;
 }
 
 message RemoveVerdictV1Request {
-  uint64 verdict_id = 1 [(validate.rules).uint64.gt = 0];
+  uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
 }
 
 message RemoveVerdictV1Response {
-  bool found = 1;
+  bool success = 1;
 }
 
 message Verdict {

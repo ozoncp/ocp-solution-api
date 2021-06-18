@@ -106,7 +106,7 @@ func local_request_OcpVerdictApi_ListVerdictsV1_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_OcpVerdictApi_UpdateVerdictV1_0 = &utilities.DoubleArray{Encoding: map[string]int{"verdict_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_OcpVerdictApi_UpdateVerdictV1_0 = &utilities.DoubleArray{Encoding: map[string]int{"solution_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_OcpVerdictApi_UpdateVerdictV1_0(ctx context.Context, marshaler runtime.Marshaler, client OcpVerdictApiClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -120,15 +120,15 @@ func request_OcpVerdictApi_UpdateVerdictV1_0(ctx context.Context, marshaler runt
 		_   = err
 	)
 
-	val, ok = pathParams["verdict_id"]
+	val, ok = pathParams["solution_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "verdict_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "solution_id")
 	}
 
-	protoReq.VerdictId, err = runtime.Uint64(val)
+	protoReq.SolutionId, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "verdict_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "solution_id", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -154,15 +154,15 @@ func local_request_OcpVerdictApi_UpdateVerdictV1_0(ctx context.Context, marshale
 		_   = err
 	)
 
-	val, ok = pathParams["verdict_id"]
+	val, ok = pathParams["solution_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "verdict_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "solution_id")
 	}
 
-	protoReq.VerdictId, err = runtime.Uint64(val)
+	protoReq.SolutionId, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "verdict_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "solution_id", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -188,15 +188,15 @@ func request_OcpVerdictApi_RemoveVerdictV1_0(ctx context.Context, marshaler runt
 		_   = err
 	)
 
-	val, ok = pathParams["verdict_id"]
+	val, ok = pathParams["solution_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "verdict_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "solution_id")
 	}
 
-	protoReq.VerdictId, err = runtime.Uint64(val)
+	protoReq.SolutionId, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "verdict_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "solution_id", err)
 	}
 
 	msg, err := client.RemoveVerdictV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -215,15 +215,15 @@ func local_request_OcpVerdictApi_RemoveVerdictV1_0(ctx context.Context, marshale
 		_   = err
 	)
 
-	val, ok = pathParams["verdict_id"]
+	val, ok = pathParams["solution_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "verdict_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "solution_id")
 	}
 
-	protoReq.VerdictId, err = runtime.Uint64(val)
+	protoReq.SolutionId, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "verdict_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "solution_id", err)
 	}
 
 	msg, err := server.RemoveVerdictV1(ctx, &protoReq)
@@ -458,9 +458,9 @@ var (
 
 	pattern_OcpVerdictApi_ListVerdictsV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "verdicts"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_OcpVerdictApi_UpdateVerdictV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "verdicts", "verdict_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_OcpVerdictApi_UpdateVerdictV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "verdicts", "solution_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_OcpVerdictApi_RemoveVerdictV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "verdicts", "verdict_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_OcpVerdictApi_RemoveVerdictV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "verdicts", "solution_id"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

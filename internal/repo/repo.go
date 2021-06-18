@@ -11,7 +11,7 @@ import (
 
 const (
 	solutionsTableName = "solutions"
-	// verdictsTableName  = "verdicts"
+	verdictsTableName  = "verdicts"
 )
 
 type Repo interface {
@@ -20,6 +20,12 @@ type Repo interface {
 	RemoveSolution(ctx context.Context, solutionId uint64) error
 	UpdateSolution(ctx context.Context, solution models.Solution) error
 	ListSolutions(ctx context.Context, limit, offset uint64) ([]*models.Solution, error)
+
+	AddVerdict(ctx context.Context, verdict models.Verdict) (*models.Verdict, error)
+	AddVerdicts(ctx context.Context, verdicts []models.Verdict) error
+	RemoveVerdict(ctx context.Context, solutionId uint64) error
+	UpdateVerdict(ctx context.Context, verdict models.Verdict) error
+	ListVerdicts(ctx context.Context, limit, offset uint64) ([]*models.Verdict, error)
 }
 
 func NewRepo(db sqlx.DB) Repo {
@@ -47,7 +53,6 @@ func (r *repo) AddSolution(ctx context.Context, solution models.Solution) (*mode
 func (r *repo) AddSolutions(ctx context.Context, solutions []models.Solution) error {
 	query := sq.Insert(solutionsTableName).
 		Columns("issue_id").
-		Suffix(`RETURNING "id"`).
 		RunWith(r.db).
 		PlaceholderFormat(sq.Dollar)
 
@@ -65,9 +70,18 @@ func (r *repo) RemoveSolution(ctx context.Context, solutionId uint64) error {
 		RunWith(r.db).
 		PlaceholderFormat(sq.Dollar)
 
-	// TODO: remove verdict
-
 	_, err := query.ExecContext(ctx)
+
+	if err == nil {
+		// remove corresponding verdict
+		query = sq.Delete(verdictsTableName).
+			Where(sq.Eq{"solution_id": solutionId}).
+			RunWith(r.db).
+			PlaceholderFormat(sq.Dollar)
+
+		_, err = query.ExecContext(ctx)
+	}
+
 	return err
 }
 
@@ -78,14 +92,12 @@ func (r *repo) UpdateSolution(ctx context.Context, solution models.Solution) err
 		RunWith(r.db).
 		PlaceholderFormat(sq.Dollar)
 
-	// TODO: update verdict
-
 	_, err := query.ExecContext(ctx)
 	return err
 }
 
 func (r *repo) ListSolutions(ctx context.Context, limit, offset uint64) ([]*models.Solution, error) {
-	query := sq.Select("id", "issueId").
+	query := sq.Select("id", "issue_id").
 		From(solutionsTableName).
 		RunWith(r.db).
 		Limit(limit).
@@ -104,7 +116,87 @@ func (r *repo) ListSolutions(ctx context.Context, limit, offset uint64) ([]*mode
 			continue
 		}
 		solutions = append(solutions, models.NewSolution(solutionId, issueId))
-		// TODO: fetch verdicts
 	}
 	return solutions, nil
+}
+
+func (r *repo) AddVerdict(ctx context.Context, verdict models.Verdict) (*models.Verdict, error) {
+	query := sq.Insert(verdictsTableName).
+		Columns("solution_id").
+		Values(verdict.SolutionId()).
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
+
+	_, err := query.ExecContext(ctx)
+
+	return &verdict, err
+}
+
+func (r *repo) AddVerdicts(ctx context.Context, verdicts []models.Verdict) error {
+	query := sq.Insert(verdictsTableName).
+		Columns("solution_id").
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
+
+	for _, verdict := range verdicts {
+		query = query.Values(verdict.SolutionId())
+	}
+
+	_, err := query.ExecContext(ctx)
+	return err
+}
+
+func (r *repo) RemoveVerdict(ctx context.Context, solutionId uint64) error {
+	query := sq.Delete(verdictsTableName).
+		Where(sq.Eq{"solution_id": solutionId}).
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
+
+	_, err := query.ExecContext(ctx)
+
+	return err
+}
+
+func (r *repo) UpdateVerdict(ctx context.Context, verdict models.Verdict) error {
+	status, comment, userId, timestamp := verdict.Status()
+	query := sq.Update(verdictsTableName).
+		Set("status", status).
+		Set("comment", comment).
+		Set("user_id", userId).
+		Set("timestamp", timestamp).
+		Where(sq.Eq{"solution_id": verdict.SolutionId()}).
+		RunWith(r.db).
+		PlaceholderFormat(sq.Dollar)
+
+	_, err := query.ExecContext(ctx)
+	return err
+}
+
+func (r *repo) ListVerdicts(ctx context.Context, limit, offset uint64) ([]*models.Verdict, error) {
+	query := sq.Select("solution_id", "user_id", "status", "comment", "timestamp").
+		From(verdictsTableName).
+		RunWith(r.db).
+		Limit(limit).
+		Offset(offset).
+		PlaceholderFormat(sq.Dollar)
+
+	rows, err := query.QueryContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var verdicts []*models.Verdict
+	for rows.Next() {
+		var solutionId, userId uint64
+		var status models.Status
+		var comment string
+		var timestamp int64
+		if err := rows.Scan(&solutionId, &userId, &status, &comment, &timestamp); err != nil {
+			continue
+		}
+		verdict := models.NewVerdict(solutionId, userId, status, comment)
+		verdict.ForceTimestamp(timestamp)
+		verdicts = append(verdicts, verdict)
+	}
+	return verdicts, nil
 }

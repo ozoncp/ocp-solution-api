@@ -647,16 +647,6 @@ func (m *Solution) Validate() error {
 		}
 	}
 
-	if v, ok := interface{}(m.GetVerdict()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return SolutionValidationError{
-				field:  "Verdict",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	return nil
 }
 

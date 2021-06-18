@@ -27,7 +27,6 @@ func run() error {
 	s := grpc.NewServer()
 	reflection.Register(s)
 	// this Pings the database trying to connect
-	// use sqlx.Open() for sql.Open() semantics
 	db, err := sqlx.Connect("postgres", "user=postgres dbname=ozoncp sslmode=disable")
 	if err != nil {
 		log.Fatalln(err)
@@ -35,7 +34,7 @@ func run() error {
 	repo := repo.NewRepo(*db)
 	desc.RegisterOcpSolutionApiServer(s, api.NewOcpSolutionApi(repo))
 
-	fmt.Printf("server is listening on localhost%v\n", grpcPort)
+	fmt.Printf("Solution gRPC server is listening on localhost%v\n", grpcPort)
 	if err := s.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

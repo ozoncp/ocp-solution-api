@@ -104,18 +104,6 @@
     }
   },
   "definitions": {
-    "VerdictStatus": {
-      "type": "string",
-      "enum": [
-        "InProgress",
-        "Passed",
-        "Failed",
-        "SyntaxError",
-        "CompilationError",
-        "Dropped"
-      ],
-      "default": "InProgress"
-    },
     "apiCreateSolutionV1Response": {
       "type": "object",
       "properties": {
@@ -153,9 +141,6 @@
         "issue_id": {
           "type": "string",
           "format": "uint64"
-        },
-        "verdict": {
-          "$ref": "#/definitions/apiVerdict"
         }
       }
     },
@@ -164,29 +149,6 @@
       "properties": {
         "success": {
           "type": "boolean"
-        }
-      }
-    },
-    "apiVerdict": {
-      "type": "object",
-      "properties": {
-        "solution_id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "user_id": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "status": {
-          "$ref": "#/definitions/VerdictStatus"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "int64"
-        },
-        "comment": {
-          "type": "string"
         }
       }
     },

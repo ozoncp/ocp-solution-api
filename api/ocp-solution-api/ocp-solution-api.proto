@@ -1,7 +1,6 @@
 syntax = "proto3";
 package ocp.solution.api;
 
-import "api/ocp-verdict-api/ocp-verdict-api.proto";
 import "google/api/annotations.proto";
 import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
 
@@ -69,6 +68,4 @@ message RemoveSolutionV1Response {
 message Solution {
   uint64 solution_id = 1 [(validate.rules).uint64.gt = 0];
   uint64 issue_id = 2 [(validate.rules).uint64.gt = 0];
-
-  ocp.verdict.api.Verdict verdict = 3;
 }

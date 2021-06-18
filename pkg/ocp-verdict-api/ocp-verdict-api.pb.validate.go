@@ -41,16 +41,9 @@ func (m *CreateVerdictV1Request) Validate() error {
 		return nil
 	}
 
-	if m.GetVerdictId() <= 0 {
+	if m.GetSolutionId() <= 0 {
 		return CreateVerdictV1RequestValidationError{
-			field:  "VerdictId",
-			reason: "value must be greater than 0",
-		}
-	}
-
-	if m.GetIssueId() <= 0 {
-		return CreateVerdictV1RequestValidationError{
-			field:  "IssueId",
+			field:  "SolutionId",
 			reason: "value must be greater than 0",
 		}
 	}
@@ -352,9 +345,9 @@ func (m *UpdateVerdictV1Request) Validate() error {
 		return nil
 	}
 
-	if m.GetVerdictId() <= 0 {
+	if m.GetSolutionId() <= 0 {
 		return UpdateVerdictV1RequestValidationError{
-			field:  "VerdictId",
+			field:  "SolutionId",
 			reason: "value must be greater than 0",
 		}
 	}
@@ -432,15 +425,7 @@ func (m *UpdateVerdictV1Response) Validate() error {
 		return nil
 	}
 
-	if v, ok := interface{}(m.GetVerdict()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateVerdictV1ResponseValidationError{
-				field:  "Verdict",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Success
 
 	return nil
 }
@@ -509,9 +494,9 @@ func (m *RemoveVerdictV1Request) Validate() error {
 		return nil
 	}
 
-	if m.GetVerdictId() <= 0 {
+	if m.GetSolutionId() <= 0 {
 		return RemoveVerdictV1RequestValidationError{
-			field:  "VerdictId",
+			field:  "SolutionId",
 			reason: "value must be greater than 0",
 		}
 	}
@@ -583,7 +568,7 @@ func (m *RemoveVerdictV1Response) Validate() error {
 		return nil
 	}
 
-	// no validation rules for Found
+	// no validation rules for Success
 
 	return nil
 }
