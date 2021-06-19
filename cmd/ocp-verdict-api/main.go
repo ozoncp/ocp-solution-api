@@ -11,11 +11,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	api "github.com/ozoncp/ocp-solution-api/internal/api"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
-	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"
+	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api"
 )
 
 const (
-	grpcPort = ":7002"
+	grpcPort = ":7003"
 )
 
 func run() error {
@@ -32,9 +32,9 @@ func run() error {
 		log.Fatalln(err)
 	}
 	repo := repo.NewRepo(*db)
-	desc.RegisterOcpSolutionApiServer(s, api.NewOcpSolutionApi(repo))
+	desc.RegisterOcpVerdictApiServer(s, api.NewOcpVerdictApi(repo))
 
-	fmt.Printf("Solution gRPC server is listening on localhost%v\n", grpcPort)
+	fmt.Printf("Verdict gRPC server is listening on localhost%v\n", grpcPort)
 	if err := s.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

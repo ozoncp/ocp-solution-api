@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type OcpVerdictApiClient interface {
 	CreateVerdictV1(ctx context.Context, in *CreateVerdictV1Request, opts ...grpc.CallOption) (*CreateVerdictV1Response, error)
 	ListVerdictsV1(ctx context.Context, in *ListVerdictsV1Request, opts ...grpc.CallOption) (*ListVerdictsV1Response, error)
-	DescribeVerdictV1(ctx context.Context, in *DescribeVerdictV1Request, opts ...grpc.CallOption) (*DescribeVerdictV1Response, error)
+	UpdateVerdictV1(ctx context.Context, in *UpdateVerdictV1Request, opts ...grpc.CallOption) (*UpdateVerdictV1Response, error)
 	RemoveVerdictV1(ctx context.Context, in *RemoveVerdictV1Request, opts ...grpc.CallOption) (*RemoveVerdictV1Response, error)
 }
 
@@ -50,9 +50,9 @@ func (c *ocpVerdictApiClient) ListVerdictsV1(ctx context.Context, in *ListVerdic
 	return out, nil
 }
 
-func (c *ocpVerdictApiClient) DescribeVerdictV1(ctx context.Context, in *DescribeVerdictV1Request, opts ...grpc.CallOption) (*DescribeVerdictV1Response, error) {
-	out := new(DescribeVerdictV1Response)
-	err := c.cc.Invoke(ctx, "/ocp.verdict.api.OcpVerdictApi/DescribeVerdictV1", in, out, opts...)
+func (c *ocpVerdictApiClient) UpdateVerdictV1(ctx context.Context, in *UpdateVerdictV1Request, opts ...grpc.CallOption) (*UpdateVerdictV1Response, error) {
+	out := new(UpdateVerdictV1Response)
+	err := c.cc.Invoke(ctx, "/ocp.verdict.api.OcpVerdictApi/UpdateVerdictV1", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (c *ocpVerdictApiClient) RemoveVerdictV1(ctx context.Context, in *RemoveVer
 type OcpVerdictApiServer interface {
 	CreateVerdictV1(context.Context, *CreateVerdictV1Request) (*CreateVerdictV1Response, error)
 	ListVerdictsV1(context.Context, *ListVerdictsV1Request) (*ListVerdictsV1Response, error)
-	DescribeVerdictV1(context.Context, *DescribeVerdictV1Request) (*DescribeVerdictV1Response, error)
+	UpdateVerdictV1(context.Context, *UpdateVerdictV1Request) (*UpdateVerdictV1Response, error)
 	RemoveVerdictV1(context.Context, *RemoveVerdictV1Request) (*RemoveVerdictV1Response, error)
 	mustEmbedUnimplementedOcpVerdictApiServer()
 }
@@ -89,8 +89,8 @@ func (UnimplementedOcpVerdictApiServer) CreateVerdictV1(context.Context, *Create
 func (UnimplementedOcpVerdictApiServer) ListVerdictsV1(context.Context, *ListVerdictsV1Request) (*ListVerdictsV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListVerdictsV1 not implemented")
 }
-func (UnimplementedOcpVerdictApiServer) DescribeVerdictV1(context.Context, *DescribeVerdictV1Request) (*DescribeVerdictV1Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DescribeVerdictV1 not implemented")
+func (UnimplementedOcpVerdictApiServer) UpdateVerdictV1(context.Context, *UpdateVerdictV1Request) (*UpdateVerdictV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateVerdictV1 not implemented")
 }
 func (UnimplementedOcpVerdictApiServer) RemoveVerdictV1(context.Context, *RemoveVerdictV1Request) (*RemoveVerdictV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveVerdictV1 not implemented")
@@ -144,20 +144,20 @@ func _OcpVerdictApi_ListVerdictsV1_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OcpVerdictApi_DescribeVerdictV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DescribeVerdictV1Request)
+func _OcpVerdictApi_UpdateVerdictV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateVerdictV1Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OcpVerdictApiServer).DescribeVerdictV1(ctx, in)
+		return srv.(OcpVerdictApiServer).UpdateVerdictV1(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ocp.verdict.api.OcpVerdictApi/DescribeVerdictV1",
+		FullMethod: "/ocp.verdict.api.OcpVerdictApi/UpdateVerdictV1",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OcpVerdictApiServer).DescribeVerdictV1(ctx, req.(*DescribeVerdictV1Request))
+		return srv.(OcpVerdictApiServer).UpdateVerdictV1(ctx, req.(*UpdateVerdictV1Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -196,8 +196,8 @@ var OcpVerdictApi_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OcpVerdictApi_ListVerdictsV1_Handler,
 		},
 		{
-			MethodName: "DescribeVerdictV1",
-			Handler:    _OcpVerdictApi_DescribeVerdictV1_Handler,
+			MethodName: "UpdateVerdictV1",
+			Handler:    _OcpVerdictApi_UpdateVerdictV1_Handler,
 		},
 		{
 			MethodName: "RemoveVerdictV1",

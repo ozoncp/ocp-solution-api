@@ -5,6 +5,7 @@
 package mocks
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -34,16 +35,146 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 	return m.recorder
 }
 
-// AddSolutions mocks base method.
-func (m *MockRepo) AddSolutions(arg0 []models.Solution) error {
+// AddSolution mocks base method.
+func (m *MockRepo) AddSolution(arg0 context.Context, arg1 models.Solution) (*models.Solution, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddSolutions", arg0)
+	ret := m.ctrl.Call(m, "AddSolution", arg0, arg1)
+	ret0, _ := ret[0].(*models.Solution)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddSolution indicates an expected call of AddSolution.
+func (mr *MockRepoMockRecorder) AddSolution(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddSolution", reflect.TypeOf((*MockRepo)(nil).AddSolution), arg0, arg1)
+}
+
+// AddSolutions mocks base method.
+func (m *MockRepo) AddSolutions(arg0 context.Context, arg1 []models.Solution) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddSolutions", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddSolutions indicates an expected call of AddSolutions.
-func (mr *MockRepoMockRecorder) AddSolutions(arg0 interface{}) *gomock.Call {
+func (mr *MockRepoMockRecorder) AddSolutions(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddSolutions", reflect.TypeOf((*MockRepo)(nil).AddSolutions), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddSolutions", reflect.TypeOf((*MockRepo)(nil).AddSolutions), arg0, arg1)
+}
+
+// AddVerdict mocks base method.
+func (m *MockRepo) AddVerdict(arg0 context.Context, arg1 models.Verdict) (*models.Verdict, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddVerdict", arg0, arg1)
+	ret0, _ := ret[0].(*models.Verdict)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddVerdict indicates an expected call of AddVerdict.
+func (mr *MockRepoMockRecorder) AddVerdict(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddVerdict", reflect.TypeOf((*MockRepo)(nil).AddVerdict), arg0, arg1)
+}
+
+// AddVerdicts mocks base method.
+func (m *MockRepo) AddVerdicts(arg0 context.Context, arg1 []models.Verdict) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddVerdicts", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddVerdicts indicates an expected call of AddVerdicts.
+func (mr *MockRepoMockRecorder) AddVerdicts(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddVerdicts", reflect.TypeOf((*MockRepo)(nil).AddVerdicts), arg0, arg1)
+}
+
+// ListSolutions mocks base method.
+func (m *MockRepo) ListSolutions(arg0 context.Context, arg1, arg2 uint64) ([]*models.Solution, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListSolutions", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*models.Solution)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListSolutions indicates an expected call of ListSolutions.
+func (mr *MockRepoMockRecorder) ListSolutions(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSolutions", reflect.TypeOf((*MockRepo)(nil).ListSolutions), arg0, arg1, arg2)
+}
+
+// ListVerdicts mocks base method.
+func (m *MockRepo) ListVerdicts(arg0 context.Context, arg1, arg2 uint64) ([]*models.Verdict, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListVerdicts", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*models.Verdict)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListVerdicts indicates an expected call of ListVerdicts.
+func (mr *MockRepoMockRecorder) ListVerdicts(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListVerdicts", reflect.TypeOf((*MockRepo)(nil).ListVerdicts), arg0, arg1, arg2)
+}
+
+// RemoveSolution mocks base method.
+func (m *MockRepo) RemoveSolution(arg0 context.Context, arg1 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveSolution", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveSolution indicates an expected call of RemoveSolution.
+func (mr *MockRepoMockRecorder) RemoveSolution(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveSolution", reflect.TypeOf((*MockRepo)(nil).RemoveSolution), arg0, arg1)
+}
+
+// RemoveVerdict mocks base method.
+func (m *MockRepo) RemoveVerdict(arg0 context.Context, arg1 uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveVerdict", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveVerdict indicates an expected call of RemoveVerdict.
+func (mr *MockRepoMockRecorder) RemoveVerdict(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveVerdict", reflect.TypeOf((*MockRepo)(nil).RemoveVerdict), arg0, arg1)
+}
+
+// UpdateSolution mocks base method.
+func (m *MockRepo) UpdateSolution(arg0 context.Context, arg1 models.Solution) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateSolution", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateSolution indicates an expected call of UpdateSolution.
+func (mr *MockRepoMockRecorder) UpdateSolution(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSolution", reflect.TypeOf((*MockRepo)(nil).UpdateSolution), arg0, arg1)
+}
+
+// UpdateVerdict mocks base method.
+func (m *MockRepo) UpdateVerdict(arg0 context.Context, arg1 models.Verdict) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateVerdict", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateVerdict indicates an expected call of UpdateVerdict.
+func (mr *MockRepoMockRecorder) UpdateVerdict(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateVerdict", reflect.TypeOf((*MockRepo)(nil).UpdateVerdict), arg0, arg1)
 }

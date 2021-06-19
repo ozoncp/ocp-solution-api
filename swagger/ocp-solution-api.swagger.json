@@ -10,29 +10,101 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
-  "definitions": {
-    "VerdictStatus": {
-      "type": "string",
-      "enum": [
-        "InProgress",
-        "Passed",
-        "Failed",
-        "SyntaxError",
-        "CompilationError",
-        "Dropped"
-      ],
-      "default": "InProgress"
-    },
-    "apiCreateSolutionV1Response": {
-      "type": "object",
-      "properties": {
-        "solution": {
-          "$ref": "#/definitions/apiSolution"
-        }
+  "paths": {
+    "/v1/solution": {
+      "post": {
+        "operationId": "OcpSolutionApi_UpdateSolutionV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateSolutionV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "OcpSolutionApi"
+        ]
       }
     },
-    "apiDescribeSolutionV1Response": {
+    "/v1/solutions": {
+      "get": {
+        "operationId": "OcpSolutionApi_ListSolutionsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListSolutionsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpSolutionApi"
+        ]
+      }
+    },
+    "/v1/solutions/{solution_id}": {
+      "delete": {
+        "operationId": "OcpSolutionApi_RemoveSolutionV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiRemoveSolutionV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "solution_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpSolutionApi"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiCreateSolutionV1Response": {
       "type": "object",
       "properties": {
         "solution": {
@@ -54,7 +126,7 @@
     "apiRemoveSolutionV1Response": {
       "type": "object",
       "properties": {
-        "found": {
+        "success": {
           "type": "boolean"
         }
       }
@@ -62,39 +134,21 @@
     "apiSolution": {
       "type": "object",
       "properties": {
-        "solutionId": {
+        "solution_id": {
           "type": "string",
           "format": "uint64"
         },
-        "issueId": {
+        "issue_id": {
           "type": "string",
           "format": "uint64"
-        },
-        "verdict": {
-          "$ref": "#/definitions/apiVerdict"
         }
       }
     },
-    "apiVerdict": {
+    "apiUpdateSolutionV1Response": {
       "type": "object",
       "properties": {
-        "solutionId": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "userId": {
-          "type": "string",
-          "format": "uint64"
-        },
-        "status": {
-          "$ref": "#/definitions/VerdictStatus"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "int64"
-        },
-        "comment": {
-          "type": "string"
+        "success": {
+          "type": "boolean"
         }
       }
     },

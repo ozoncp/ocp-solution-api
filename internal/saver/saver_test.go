@@ -1,7 +1,10 @@
 package saver_test
 
 import (
+	"context"
 	"errors"
+	"time"
+
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -9,7 +12,6 @@ import (
 	"github.com/ozoncp/ocp-solution-api/internal/mocks"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/saver"
-	"time"
 )
 
 var _ = Describe("Saver", func() {
@@ -56,7 +58,7 @@ var _ = Describe("Saver", func() {
 			batchSize = 2
 			capacity = 0
 
-			mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(nil).Times(0)
+			mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Any()).Return(nil).Times(0)
 		})
 
 		It("", func() {
@@ -72,7 +74,7 @@ var _ = Describe("Saver", func() {
 			batchSize = 0
 			capacity = 1
 
-			mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(nil).Times(0)
+			mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Any()).Return(nil).Times(0)
 		})
 
 		It("", func() {
@@ -88,7 +90,7 @@ var _ = Describe("Saver", func() {
 			batchSize = 1
 			capacity = 1
 
-			mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(nil).Times(5)
+			mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Any()).Return(nil).Times(5)
 		})
 
 		It("", func() {
@@ -109,8 +111,8 @@ var _ = Describe("Saver", func() {
 			repoError = errors.New("out of memory")
 
 			gomock.InOrder(
-				mockRepo.EXPECT().AddSolutions(gomock.Len(batchSize)).Return(nil),
-				mockRepo.EXPECT().AddSolutions(gomock.Any()).Return(repoError),
+				mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Len(batchSize)).Return(nil),
+				mockRepo.EXPECT().AddSolutions(context.Background(), gomock.Any()).Return(repoError),
 			)
 		})
 

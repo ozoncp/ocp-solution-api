@@ -10,7 +10,154 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/v1/verdicts": {
+      "get": {
+        "operationId": "OcpVerdictApi_ListVerdictsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListVerdictsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpVerdictApi"
+        ]
+      },
+      "post": {
+        "operationId": "OcpVerdictApi_CreateVerdictV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateVerdictV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "OcpVerdictApi"
+        ]
+      }
+    },
+    "/v1/verdicts/{solution_id}": {
+      "get": {
+        "operationId": "OcpVerdictApi_UpdateVerdictV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateVerdictV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "solution_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "InProgress",
+              "Passed",
+              "Failed",
+              "SyntaxError",
+              "CompilationError",
+              "Dropped"
+            ],
+            "default": "InProgress"
+          },
+          {
+            "name": "comment",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "OcpVerdictApi"
+        ]
+      },
+      "delete": {
+        "operationId": "OcpVerdictApi_RemoveVerdictV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiRemoveVerdictV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "solution_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "OcpVerdictApi"
+        ]
+      }
+    }
+  },
   "definitions": {
     "VerdictStatus": {
       "type": "string",
@@ -27,15 +174,7 @@
     "apiCreateVerdictV1Response": {
       "type": "object",
       "properties": {
-        "Verdict": {
-          "$ref": "#/definitions/apiVerdict"
-        }
-      }
-    },
-    "apiDescribeVerdictV1Response": {
-      "type": "object",
-      "properties": {
-        "Verdict": {
+        "verdict": {
           "$ref": "#/definitions/apiVerdict"
         }
       }
@@ -43,7 +182,7 @@
     "apiListVerdictsV1Response": {
       "type": "object",
       "properties": {
-        "Verdicts": {
+        "verdicts": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/apiVerdict"
@@ -54,7 +193,15 @@
     "apiRemoveVerdictV1Response": {
       "type": "object",
       "properties": {
-        "found": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "apiUpdateVerdictV1Response": {
+      "type": "object",
+      "properties": {
+        "success": {
           "type": "boolean"
         }
       }
@@ -62,11 +209,11 @@
     "apiVerdict": {
       "type": "object",
       "properties": {
-        "solutionId": {
+        "solution_id": {
           "type": "string",
           "format": "uint64"
         },
-        "userId": {
+        "user_id": {
           "type": "string",
           "format": "uint64"
         },

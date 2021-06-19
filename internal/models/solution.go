@@ -7,15 +7,11 @@ import (
 type Solution struct {
 	id      uint64
 	issueId uint64
-	verdict *Verdict
-	// TODO: integrate Snippet after 3rd lesson review
-	// TODO: integrate Check after 3rd lesson review
 }
 
 type jsonSolution struct {
-	Id      uint64   `json:"id"`
-	IssueId uint64   `json:"issue_id"`
-	Verdict *Verdict `json:"verdict"`
+	Id      uint64 `json:"id"`
+	IssueId uint64 `json:"issue_id"`
 }
 
 // NewSolution function is a convenient way to construct Solution object
@@ -23,7 +19,6 @@ func NewSolution(id uint64, issueId uint64) *Solution {
 	return &Solution{
 		id,
 		issueId,
-		nil,
 	}
 }
 
@@ -40,7 +35,6 @@ func (s Solution) MarshalJSON() ([]byte, error) {
 	proxy := &jsonSolution{
 		Id:      s.id,
 		IssueId: s.issueId,
-		Verdict: s.verdict,
 	}
 	return json.Marshal(proxy)
 }
@@ -54,7 +48,6 @@ func (s *Solution) UnmarshalJSON(b []byte) error {
 
 	s.id = proxy.Id
 	s.issueId = proxy.IssueId
-	s.verdict = proxy.Verdict
 
 	return nil
 }
@@ -67,9 +60,4 @@ func (s Solution) Id() uint64 {
 // IssueId method helps to retrieve issueId from Solution
 func (s Solution) IssueId() uint64 {
 	return s.issueId
-}
-
-// Verdict method helps to retrieve verdict from Solution
-func (s Solution) Verdict() *Verdict {
-	return s.verdict
 }
