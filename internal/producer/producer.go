@@ -12,9 +12,7 @@ type producer struct {
 	p sarama.SyncProducer
 }
 
-var brokers = []string{"127.0.0.1:9094"}
-
-func New() (Producer, error) {
+func New(brokers []string) (Producer, error) {
 	config := sarama.NewConfig()
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.RequiredAcks = sarama.WaitForAll

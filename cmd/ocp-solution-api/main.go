@@ -12,6 +12,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	api "github.com/ozoncp/ocp-solution-api/internal/api"
+	"github.com/ozoncp/ocp-solution-api/internal/producer"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -29,6 +30,8 @@ const (
 	prometeusPort = ":9001"
 )
 
+var brokers = []string{"127.0.0.1:9094"}
+
 func runGrpc() error {
 	listen, err := net.Listen("tcp", grpcPort)
 	if err != nil {
@@ -44,7 +47,11 @@ func runGrpc() error {
 	}
 	repo := repo.NewRepo(*db)
 	const batchSize = 64
-	desc.RegisterOcpSolutionApiServer(s, api.NewOcpSolutionApi(repo, batchSize))
+	p, err := producer.New(brokers)
+	if err != nil {
+		panic(err.Error())
+	}
+	desc.RegisterOcpSolutionApiServer(s, api.NewOcpSolutionApi(repo, batchSize, p))
 
 	fmt.Printf("Solution gRPC server is listening on localhost%v\n", grpcPort)
 	if err := s.Serve(listen); err != nil {

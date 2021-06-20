@@ -13,6 +13,9 @@ import (
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"
 
 	opentracing "github.com/opentracing/opentracing-go"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type ocpSolutionApi struct {
@@ -35,16 +38,16 @@ func (a *ocpSolutionApi) MultiCreateSolutionV1(
 		log.Error().Msg(err.Error())
 	}
 
+	if err := req.Validate(); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	span := opentracing.GlobalTracer().StartSpan("MultiCreateSolutionV1")
 	defer span.Finish()
 
 	flusher, err := flusher.New(a.repo, a.batchSize)
-	respSolutions := make([]*desc.Solution, 0)
 	if err != nil {
-		for _, issue_id := range req.IssueIds {
-			respSolutions = append(respSolutions, &desc.Solution{IssueId: issue_id})
-		}
-		return &desc.MultiCreateSolutionV1Response{Solutions: respSolutions}, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	solutions := make([]models.Solution, 0)
@@ -53,6 +56,13 @@ func (a *ocpSolutionApi) MultiCreateSolutionV1(
 		solutions = append(solutions, *solution)
 	}
 	remaining, err := flusher.FlushSolutions(opentracing.ContextWithSpan(ctx, span), solutions)
+	if err != nil {
+		return nil, status.Error(codes.Aborted, err.Error())
+	}
+
+	multiCreateSolutionV1Metrics.Succeeded.Inc()
+
+	respSolutions := make([]*desc.Solution, 0)
 	for _, solution := range remaining {
 		respSolutions = append(
 			respSolutions,
@@ -62,9 +72,7 @@ func (a *ocpSolutionApi) MultiCreateSolutionV1(
 			},
 		)
 	}
-	if len(remaining) == 0 && err == nil {
-		multiCreateSolutionV1Metrics.Succeeded.Inc()
-	}
+
 	return &desc.MultiCreateSolutionV1Response{Solutions: respSolutions}, err
 }
 
@@ -81,15 +89,16 @@ func (a *ocpSolutionApi) CreateSolutionV1(
 		log.Error().Msg(err.Error())
 	}
 
+	if err := req.Validate(); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	solution, err := a.repo.AddSolution(ctx, *models.NewSolution(0, req.IssueId))
-
-	if solution != nil && err != nil {
-		createSolutionV1Metrics.Succeeded.Inc()
+	if solution == nil || err != nil {
+		return nil, status.Error(codes.Aborted, "solution not added: "+err.Error())
 	}
 
-	if solution == nil {
-		solution = models.NewSolution(0, 0)
-	}
+	createSolutionV1Metrics.Succeeded.Inc()
 
 	return &desc.CreateSolutionV1Response{
 		Solution: &desc.Solution{
@@ -107,16 +116,22 @@ func (a *ocpSolutionApi) ListSolutionsV1(
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
 
+	if err := req.Validate(); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	solutions, err := a.repo.ListSolutions(ctx, req.Limit, req.Offset)
+	if err != nil {
+		return nil, status.Error(codes.Aborted, err.Error())
+	}
+
 	respSolutions := make([]*desc.Solution, 0)
-	if err == nil {
-		for _, solution := range solutions {
-			respSolution := desc.Solution{
-				SolutionId: solution.Id(),
-				IssueId:    solution.IssueId(),
-			}
-			respSolutions = append(respSolutions, &respSolution)
+	for _, solution := range solutions {
+		respSolution := desc.Solution{
+			SolutionId: solution.Id(),
+			IssueId:    solution.IssueId(),
 		}
+		respSolutions = append(respSolutions, &respSolution)
 	}
 
 	return &desc.ListSolutionsV1Response{
@@ -137,14 +152,19 @@ func (a *ocpSolutionApi) UpdateSolutionV1(
 		log.Error().Msg(err.Error())
 	}
 
-	solution := models.NewSolution(req.Solution.SolutionId, req.Solution.IssueId)
-	err := a.repo.UpdateSolution(ctx, *solution)
-
-	if err == nil {
-		updateSolutionV1Metrics.Succeeded.Inc()
+	if err := req.Validate(); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	return &desc.UpdateSolutionV1Response{Success: err == nil}, err
+	solution := models.NewSolution(req.Solution.SolutionId, req.Solution.IssueId)
+	err := a.repo.UpdateSolution(ctx, *solution)
+	if err != nil {
+		return nil, status.Error(codes.Aborted, err.Error())
+	}
+
+	updateSolutionV1Metrics.Succeeded.Inc()
+
+	return &desc.UpdateSolutionV1Response{Success: true}, err
 }
 
 func (a *ocpSolutionApi) RemoveSolutionV1(
@@ -160,19 +180,20 @@ func (a *ocpSolutionApi) RemoveSolutionV1(
 		log.Error().Msg(err.Error())
 	}
 
-	err := a.repo.RemoveSolution(ctx, req.SolutionId)
-
-	if err == nil {
-		removeSolutionV1Metrics.Succeeded.Inc()
+	if err := req.Validate(); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	return &desc.RemoveSolutionV1Response{Success: err == nil}, err
+	err := a.repo.RemoveSolution(ctx, req.SolutionId)
+	if err != nil {
+		return nil, status.Error(codes.Aborted, err.Error())
+	}
+
+	removeSolutionV1Metrics.Succeeded.Inc()
+
+	return &desc.RemoveSolutionV1Response{Success: true}, err
 }
 
-func NewOcpSolutionApi(repo repo.Repo, batchSize int) desc.OcpSolutionApiServer {
-	p, err := producer.New()
-	if err != nil {
-		panic(err.Error())
-	}
-	return &ocpSolutionApi{repo: repo, batchSize: batchSize, producer: p}
+func NewOcpSolutionApi(repo repo.Repo, batchSize int, producer producer.Producer) desc.OcpSolutionApiServer {
+	return &ocpSolutionApi{repo: repo, batchSize: batchSize, producer: producer}
 }
