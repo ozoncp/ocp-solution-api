@@ -8,6 +8,7 @@ import (
 
 	"github.com/ozoncp/ocp-solution-api/internal/flusher"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
+	"github.com/ozoncp/ocp-solution-api/internal/producer"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api"
 
@@ -22,6 +23,7 @@ type ocpVerdictApi struct {
 	desc.UnimplementedOcpVerdictApiServer
 	repo      repo.Repo
 	batchSize int
+	producer  producer.Producer
 }
 
 func (a *ocpVerdictApi) MultiCreateVerdictV1(
@@ -31,6 +33,9 @@ func (a *ocpVerdictApi) MultiCreateVerdictV1(
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+	if err := a.producer.SendMessage("MultiCreateVerdictV1", string(jsonStr)); err != nil {
+		log.Error().Msg(err.Error())
+	}
 
 	span := opentracing.GlobalTracer().StartSpan("MultiCreateVerdictV1")
 	defer span.Finish()
@@ -73,6 +78,9 @@ func (a *ocpVerdictApi) CreateVerdictV1(
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+	if err := a.producer.SendMessage("CreateVerdictV1", string(jsonStr)); err != nil {
+		log.Error().Msg(err.Error())
+	}
 
 	verdict, err := a.repo.AddVerdict(ctx, *models.NewVerdict(req.SolutionId, 0, models.InProgress, ""))
 
@@ -126,6 +134,9 @@ func (a *ocpVerdictApi) UpdateVerdictV1(
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+	if err := a.producer.SendMessage("UpdateVerdictV1", string(jsonStr)); err != nil {
+		log.Error().Msg(err.Error())
+	}
 
 	verdict := models.NewVerdict(req.SolutionId, req.UserId, models.Status(req.Status), req.Comment)
 	err := a.repo.UpdateVerdict(ctx, *verdict)
@@ -140,6 +151,9 @@ func (a *ocpVerdictApi) RemoveVerdictV1(
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+	if err := a.producer.SendMessage("RemoveVerdictV1", string(jsonStr)); err != nil {
+		log.Error().Msg(err.Error())
+	}
 
 	err := a.repo.RemoveVerdict(ctx, req.SolutionId)
 
@@ -147,5 +161,9 @@ func (a *ocpVerdictApi) RemoveVerdictV1(
 }
 
 func NewOcpVerdictApi(repo repo.Repo, batchSize int) desc.OcpVerdictApiServer {
-	return &ocpVerdictApi{repo: repo, batchSize: batchSize}
+	p, err := producer.New()
+	if err != nil {
+		panic(err)
+	}
+	return &ocpVerdictApi{repo: repo, batchSize: batchSize, producer: p}
 }

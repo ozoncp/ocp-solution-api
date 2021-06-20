@@ -8,6 +8,7 @@ import (
 
 	"github.com/ozoncp/ocp-solution-api/internal/flusher"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
+	"github.com/ozoncp/ocp-solution-api/internal/producer"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"
 
@@ -22,6 +23,7 @@ type ocpSolutionApi struct {
 	desc.UnimplementedOcpSolutionApiServer
 	repo      repo.Repo
 	batchSize int
+	producer  producer.Producer
 }
 
 func (a *ocpSolutionApi) MultiCreateSolutionV1(
@@ -31,6 +33,9 @@ func (a *ocpSolutionApi) MultiCreateSolutionV1(
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+	if err := a.producer.SendMessage("MultiCreateSolutionV1", string(jsonStr)); err != nil {
+		log.Error().Msg(err.Error())
+	}
 
 	span := opentracing.GlobalTracer().StartSpan("MultiCreateSolutionV1")
 	defer span.Finish()
@@ -69,6 +74,9 @@ func (a *ocpSolutionApi) CreateSolutionV1(
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+	if err := a.producer.SendMessage("CreateSolutionV1", string(jsonStr)); err != nil {
+		log.Error().Msg(err.Error())
+	}
 
 	solution, err := a.repo.AddSolution(ctx, *models.NewSolution(0, req.IssueId))
 
@@ -112,6 +120,9 @@ func (a *ocpSolutionApi) UpdateSolutionV1(
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+	if err := a.producer.SendMessage("UpdateSolutionV1", string(jsonStr)); err != nil {
+		log.Error().Msg(err.Error())
+	}
 
 	solution := models.NewSolution(req.Solution.SolutionId, req.Solution.IssueId)
 	err := a.repo.UpdateSolution(ctx, *solution)
@@ -126,6 +137,9 @@ func (a *ocpSolutionApi) RemoveSolutionV1(
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+	if err := a.producer.SendMessage("RemoveSolutionV1", string(jsonStr)); err != nil {
+		log.Error().Msg(err.Error())
+	}
 
 	err := a.repo.RemoveSolution(ctx, req.SolutionId)
 
@@ -133,5 +147,9 @@ func (a *ocpSolutionApi) RemoveSolutionV1(
 }
 
 func NewOcpSolutionApi(repo repo.Repo, batchSize int) desc.OcpSolutionApiServer {
-	return &ocpSolutionApi{repo: repo, batchSize: batchSize}
+	p, err := producer.New()
+	if err != nil {
+		panic(err)
+	}
+	return &ocpSolutionApi{repo: repo, batchSize: batchSize, producer: p}
 }

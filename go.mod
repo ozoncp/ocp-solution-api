@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/HdrHistogram/hdrhistogram-go v1.1.0 // indirect
 	github.com/Masterminds/squirrel v1.5.0
+	github.com/Shopify/sarama v1.29.0
 	github.com/envoyproxy/protoc-gen-validate v0.6.1
 	github.com/golang/mock v1.5.0
 	github.com/golang/protobuf v1.5.2
