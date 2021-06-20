@@ -10,6 +10,8 @@ import (
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api"
+
+	opentracing "github.com/opentracing/opentracing-go"
 )
 
 const (
@@ -26,8 +28,12 @@ func (a *ocpVerdictApi) MultiCreateVerdictV1(
 	ctx context.Context,
 	req *desc.MultiCreateVerdictV1Request,
 ) (*desc.MultiCreateVerdictV1Response, error) {
+
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
+
+	span := opentracing.GlobalTracer().StartSpan("MultiCreateVerdictV1")
+	defer span.Finish()
 
 	flusher, err := flusher.New(a.repo, a.batchSize)
 	respVerdicts := make([]*desc.Verdict, 0)
@@ -43,7 +49,7 @@ func (a *ocpVerdictApi) MultiCreateVerdictV1(
 		verdict := models.NewVerdict(solution_id, 0, 0, "")
 		verdicts = append(verdicts, *verdict)
 	}
-	remaining, err := flusher.FlushVerdicts(ctx, verdicts)
+	remaining, err := flusher.FlushVerdicts(opentracing.ContextWithSpan(ctx, span), verdicts)
 	for _, verdict := range remaining {
 		status, comment, userId, timestamp := verdict.Status()
 		respVerdicts = append(

@@ -7,6 +7,9 @@ import (
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	"github.com/ozoncp/ocp-solution-api/internal/utils"
+
+	opentracing "github.com/opentracing/opentracing-go"
+	"github.com/opentracing/opentracing-go/log"
 )
 
 type Flusher interface {
@@ -26,7 +29,15 @@ func (f flusher) FlushSolutions(ctx context.Context, solutions []models.Solution
 		return solutions, err
 	}
 
+	parentSpan := opentracing.SpanFromContext(ctx)
+	if parentSpan == nil {
+		parentSpan = opentracing.GlobalTracer().StartSpan("FlushSolutions")
+	}
 	for i, batch := range batches {
+		span := opentracing.GlobalTracer().StartSpan("AddSolutions", opentracing.ChildOf(parentSpan.Context()))
+		span.LogFields(log.Int("batch size", len(batch)))
+		defer span.Finish()
+
 		if err := f.repo.AddSolutions(ctx, batch); err != nil {
 			return solutions[i*f.batchSize:], err
 		}
@@ -41,7 +52,15 @@ func (f flusher) FlushVerdicts(ctx context.Context, verdicts []models.Verdict) (
 		return verdicts, err
 	}
 
+	parentSpan := opentracing.SpanFromContext(ctx)
+	if parentSpan == nil {
+		parentSpan = opentracing.GlobalTracer().StartSpan("FlushVerdicts")
+	}
 	for i, batch := range batches {
+		span := opentracing.GlobalTracer().StartSpan("AddVerdicts", opentracing.ChildOf(parentSpan.Context()))
+		span.LogFields(log.Int("batch size", len(batch)))
+		defer span.Finish()
+
 		if err := f.repo.AddVerdicts(ctx, batch); err != nil {
 			return verdicts[i*f.batchSize:], err
 		}

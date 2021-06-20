@@ -10,6 +10,8 @@ import (
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api"
+
+	opentracing "github.com/opentracing/opentracing-go"
 )
 
 const (
@@ -30,6 +32,9 @@ func (a *ocpSolutionApi) MultiCreateSolutionV1(
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
 
+	span := opentracing.GlobalTracer().StartSpan("MultiCreateSolutionV1")
+	defer span.Finish()
+
 	flusher, err := flusher.New(a.repo, a.batchSize)
 	respSolutions := make([]*desc.Solution, 0)
 	if err != nil {
@@ -44,7 +49,7 @@ func (a *ocpSolutionApi) MultiCreateSolutionV1(
 		solution := models.NewSolution(0, issue_id)
 		solutions = append(solutions, *solution)
 	}
-	remaining, err := flusher.FlushSolutions(ctx, solutions)
+	remaining, err := flusher.FlushSolutions(opentracing.ContextWithSpan(ctx, span), solutions)
 	for _, solution := range remaining {
 		respSolutions = append(
 			respSolutions,
