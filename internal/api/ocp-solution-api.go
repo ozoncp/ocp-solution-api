@@ -15,10 +15,6 @@ import (
 	opentracing "github.com/opentracing/opentracing-go"
 )
 
-const (
-// errSolutionNotFound = "solution not found"
-)
-
 type ocpSolutionApi struct {
 	desc.UnimplementedOcpSolutionApiServer
 	repo      repo.Repo
@@ -30,6 +26,8 @@ func (a *ocpSolutionApi) MultiCreateSolutionV1(
 	ctx context.Context,
 	req *desc.MultiCreateSolutionV1Request,
 ) (*desc.MultiCreateSolutionV1Response, error) {
+
+	multiCreateSolutionV1Metrics.Total.Inc()
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
@@ -64,6 +62,9 @@ func (a *ocpSolutionApi) MultiCreateSolutionV1(
 			},
 		)
 	}
+	if len(remaining) == 0 && err == nil {
+		multiCreateSolutionV1Metrics.Succeeded.Inc()
+	}
 	return &desc.MultiCreateSolutionV1Response{Solutions: respSolutions}, err
 }
 
@@ -72,6 +73,8 @@ func (a *ocpSolutionApi) CreateSolutionV1(
 	req *desc.CreateSolutionV1Request,
 ) (*desc.CreateSolutionV1Response, error) {
 
+	createSolutionV1Metrics.Total.Inc()
+
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
 	if err := a.producer.SendMessage("CreateSolutionV1", string(jsonStr)); err != nil {
@@ -79,6 +82,14 @@ func (a *ocpSolutionApi) CreateSolutionV1(
 	}
 
 	solution, err := a.repo.AddSolution(ctx, *models.NewSolution(0, req.IssueId))
+
+	if solution != nil && err != nil {
+		createSolutionV1Metrics.Succeeded.Inc()
+	}
+
+	if solution == nil {
+		solution = models.NewSolution(0, 0)
+	}
 
 	return &desc.CreateSolutionV1Response{
 		Solution: &desc.Solution{
@@ -118,6 +129,8 @@ func (a *ocpSolutionApi) UpdateSolutionV1(
 	req *desc.UpdateSolutionV1Request,
 ) (*desc.UpdateSolutionV1Response, error) {
 
+	updateSolutionV1Metrics.Total.Inc()
+
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
 	if err := a.producer.SendMessage("UpdateSolutionV1", string(jsonStr)); err != nil {
@@ -127,6 +140,10 @@ func (a *ocpSolutionApi) UpdateSolutionV1(
 	solution := models.NewSolution(req.Solution.SolutionId, req.Solution.IssueId)
 	err := a.repo.UpdateSolution(ctx, *solution)
 
+	if err == nil {
+		updateSolutionV1Metrics.Succeeded.Inc()
+	}
+
 	return &desc.UpdateSolutionV1Response{Success: err == nil}, err
 }
 
@@ -134,6 +151,8 @@ func (a *ocpSolutionApi) RemoveSolutionV1(
 	ctx context.Context,
 	req *desc.RemoveSolutionV1Request,
 ) (*desc.RemoveSolutionV1Response, error) {
+
+	removeSolutionV1Metrics.Total.Inc()
 
 	jsonStr, _ := json.Marshal(req)
 	log.Info().Msg(string(jsonStr))
@@ -143,13 +162,17 @@ func (a *ocpSolutionApi) RemoveSolutionV1(
 
 	err := a.repo.RemoveSolution(ctx, req.SolutionId)
 
+	if err == nil {
+		removeSolutionV1Metrics.Succeeded.Inc()
+	}
+
 	return &desc.RemoveSolutionV1Response{Success: err == nil}, err
 }
 
 func NewOcpSolutionApi(repo repo.Repo, batchSize int) desc.OcpSolutionApiServer {
 	p, err := producer.New()
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 	return &ocpSolutionApi{repo: repo, batchSize: batchSize, producer: p}
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -12,6 +14,7 @@ import (
 	api "github.com/ozoncp/ocp-solution-api/internal/api"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-lib/metrics"
@@ -22,10 +25,11 @@ import (
 )
 
 const (
-	grpcPort = ":7003"
+	grpcPort      = ":7003"
+	prometeusPort = ":9002"
 )
 
-func run() error {
+func runGrpc() error {
 	listen, err := net.Listen("tcp", grpcPort)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -75,14 +79,22 @@ func main() {
 	)
 
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 
 	// Set the singleton opentracing.Tracer with the Jaeger tracer.
 	opentracing.SetGlobalTracer(tracer)
 	defer closer.Close()
 
-	if err := run(); err != nil {
-		log.Fatal(err)
-	}
+	go func() {
+		// gRPC
+		if err := runGrpc(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	// The Handler function provides a default handler to expose metrics
+	// via an HTTP server. "/metrics" is the usual endpoint for that.
+	http.Handle("/metrics", promhttp.Handler())
+	log.Fatal(http.ListenAndServe(prometeusPort, nil))
 }
