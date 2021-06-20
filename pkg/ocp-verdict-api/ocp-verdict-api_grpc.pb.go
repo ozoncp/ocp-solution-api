@@ -18,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OcpVerdictApiClient interface {
+	MultiCreateVerdictV1(ctx context.Context, in *MultiCreateVerdictV1Request, opts ...grpc.CallOption) (*MultiCreateVerdictV1Response, error)
 	CreateVerdictV1(ctx context.Context, in *CreateVerdictV1Request, opts ...grpc.CallOption) (*CreateVerdictV1Response, error)
 	ListVerdictsV1(ctx context.Context, in *ListVerdictsV1Request, opts ...grpc.CallOption) (*ListVerdictsV1Response, error)
 	UpdateVerdictV1(ctx context.Context, in *UpdateVerdictV1Request, opts ...grpc.CallOption) (*UpdateVerdictV1Response, error)
@@ -30,6 +31,15 @@ type ocpVerdictApiClient struct {
 
 func NewOcpVerdictApiClient(cc grpc.ClientConnInterface) OcpVerdictApiClient {
 	return &ocpVerdictApiClient{cc}
+}
+
+func (c *ocpVerdictApiClient) MultiCreateVerdictV1(ctx context.Context, in *MultiCreateVerdictV1Request, opts ...grpc.CallOption) (*MultiCreateVerdictV1Response, error) {
+	out := new(MultiCreateVerdictV1Response)
+	err := c.cc.Invoke(ctx, "/ocp.verdict.api.OcpVerdictApi/MultiCreateVerdictV1", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *ocpVerdictApiClient) CreateVerdictV1(ctx context.Context, in *CreateVerdictV1Request, opts ...grpc.CallOption) (*CreateVerdictV1Response, error) {
@@ -72,6 +82,7 @@ func (c *ocpVerdictApiClient) RemoveVerdictV1(ctx context.Context, in *RemoveVer
 // All implementations must embed UnimplementedOcpVerdictApiServer
 // for forward compatibility
 type OcpVerdictApiServer interface {
+	MultiCreateVerdictV1(context.Context, *MultiCreateVerdictV1Request) (*MultiCreateVerdictV1Response, error)
 	CreateVerdictV1(context.Context, *CreateVerdictV1Request) (*CreateVerdictV1Response, error)
 	ListVerdictsV1(context.Context, *ListVerdictsV1Request) (*ListVerdictsV1Response, error)
 	UpdateVerdictV1(context.Context, *UpdateVerdictV1Request) (*UpdateVerdictV1Response, error)
@@ -83,6 +94,9 @@ type OcpVerdictApiServer interface {
 type UnimplementedOcpVerdictApiServer struct {
 }
 
+func (UnimplementedOcpVerdictApiServer) MultiCreateVerdictV1(context.Context, *MultiCreateVerdictV1Request) (*MultiCreateVerdictV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MultiCreateVerdictV1 not implemented")
+}
 func (UnimplementedOcpVerdictApiServer) CreateVerdictV1(context.Context, *CreateVerdictV1Request) (*CreateVerdictV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateVerdictV1 not implemented")
 }
@@ -106,6 +120,24 @@ type UnsafeOcpVerdictApiServer interface {
 
 func RegisterOcpVerdictApiServer(s grpc.ServiceRegistrar, srv OcpVerdictApiServer) {
 	s.RegisterService(&OcpVerdictApi_ServiceDesc, srv)
+}
+
+func _OcpVerdictApi_MultiCreateVerdictV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MultiCreateVerdictV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OcpVerdictApiServer).MultiCreateVerdictV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ocp.verdict.api.OcpVerdictApi/MultiCreateVerdictV1",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OcpVerdictApiServer).MultiCreateVerdictV1(ctx, req.(*MultiCreateVerdictV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _OcpVerdictApi_CreateVerdictV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -187,6 +219,10 @@ var OcpVerdictApi_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "ocp.verdict.api.OcpVerdictApi",
 	HandlerType: (*OcpVerdictApiServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "MultiCreateVerdictV1",
+			Handler:    _OcpVerdictApi_MultiCreateVerdictV1_Handler,
+		},
 		{
 			MethodName: "CreateVerdictV1",
 			Handler:    _OcpVerdictApi_CreateVerdictV1_Handler,

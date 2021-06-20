@@ -30,7 +30,7 @@ var _ = Describe("Flusher", func() {
 
 	JustBeforeEach(func() {
 		if f, err = flusher.New(mockRepo, batchSize); f != nil {
-			remaining, err = f.Flush(solutions)
+			remaining, err = f.FlushSolutions(context.Background(), solutions)
 		}
 	})
 

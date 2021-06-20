@@ -6,6 +6,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 
+	"github.com/ozoncp/ocp-solution-api/internal/flusher"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/repo"
 	desc "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api"
@@ -17,7 +18,46 @@ const (
 
 type ocpVerdictApi struct {
 	desc.UnimplementedOcpVerdictApiServer
-	repo repo.Repo
+	repo      repo.Repo
+	batchSize int
+}
+
+func (a *ocpVerdictApi) MultiCreateVerdictV1(
+	ctx context.Context,
+	req *desc.MultiCreateVerdictV1Request,
+) (*desc.MultiCreateVerdictV1Response, error) {
+	jsonStr, _ := json.Marshal(req)
+	log.Info().Msg(string(jsonStr))
+
+	flusher, err := flusher.New(a.repo, a.batchSize)
+	respVerdicts := make([]*desc.Verdict, 0)
+	if err != nil {
+		for _, solution_id := range req.SolutionIds {
+			respVerdicts = append(respVerdicts, &desc.Verdict{SolutionId: solution_id})
+		}
+		return &desc.MultiCreateVerdictV1Response{Verdicts: respVerdicts}, err
+	}
+
+	verdicts := make([]models.Verdict, 0)
+	for _, solution_id := range req.SolutionIds {
+		verdict := models.NewVerdict(solution_id, 0, 0, "")
+		verdicts = append(verdicts, *verdict)
+	}
+	remaining, err := flusher.FlushVerdicts(ctx, verdicts)
+	for _, verdict := range remaining {
+		status, comment, userId, timestamp := verdict.Status()
+		respVerdicts = append(
+			respVerdicts,
+			&desc.Verdict{
+				SolutionId: verdict.SolutionId(),
+				UserId:     userId,
+				Status:     desc.Verdict_Status(status),
+				Timestamp:  timestamp,
+				Comment:    comment,
+			},
+		)
+	}
+	return &desc.MultiCreateVerdictV1Response{Verdicts: respVerdicts}, err
 }
 
 func (a *ocpVerdictApi) CreateVerdictV1(
@@ -100,6 +140,6 @@ func (a *ocpVerdictApi) RemoveVerdictV1(
 	return &desc.RemoveVerdictV1Response{Success: err == nil}, err
 }
 
-func NewOcpVerdictApi(repo repo.Repo) desc.OcpVerdictApiServer {
-	return &ocpVerdictApi{repo: repo}
+func NewOcpVerdictApi(repo repo.Repo, batchSize int) desc.OcpVerdictApiServer {
+	return &ocpVerdictApi{repo: repo, batchSize: batchSize}
 }

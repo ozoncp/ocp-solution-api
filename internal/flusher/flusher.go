@@ -10,7 +10,8 @@ import (
 )
 
 type Flusher interface {
-	Flush(solutions []models.Solution) ([]models.Solution, error)
+	FlushSolutions(ctx context.Context, solutions []models.Solution) ([]models.Solution, error)
+	FlushVerdicts(ctx context.Context, solutions []models.Verdict) ([]models.Verdict, error)
 }
 
 type flusher struct {
@@ -19,15 +20,30 @@ type flusher struct {
 }
 
 // Flush method tries to flush all solutions passed to it and returns remaining solutions and error if error occurred
-func (f flusher) Flush(solutions []models.Solution) ([]models.Solution, error) {
+func (f flusher) FlushSolutions(ctx context.Context, solutions []models.Solution) ([]models.Solution, error) {
 	batches, err := utils.SplitSolutionsToBatches(solutions, f.batchSize)
 	if err != nil {
 		return solutions, err
 	}
 
 	for i, batch := range batches {
-		if err := f.repo.AddSolutions(context.Background(), batch); err != nil {
+		if err := f.repo.AddSolutions(ctx, batch); err != nil {
 			return solutions[i*f.batchSize:], err
+		}
+	}
+
+	return nil, nil
+}
+
+func (f flusher) FlushVerdicts(ctx context.Context, verdicts []models.Verdict) ([]models.Verdict, error) {
+	batches, err := utils.SplitVerdictsToBatches(verdicts, f.batchSize)
+	if err != nil {
+		return verdicts, err
+	}
+
+	for i, batch := range batches {
+		if err := f.repo.AddVerdicts(ctx, batch); err != nil {
+			return verdicts[i*f.batchSize:], err
 		}
 	}
 

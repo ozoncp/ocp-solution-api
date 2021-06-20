@@ -32,7 +32,8 @@ func run() error {
 		log.Fatalln(err)
 	}
 	repo := repo.NewRepo(*db)
-	desc.RegisterOcpVerdictApiServer(s, api.NewOcpVerdictApi(repo))
+	const batchSize = 64
+	desc.RegisterOcpVerdictApiServer(s, api.NewOcpVerdictApi(repo, batchSize))
 
 	fmt.Printf("Verdict gRPC server is listening on localhost%v\n", grpcPort)
 	if err := s.Serve(listen); err != nil {
