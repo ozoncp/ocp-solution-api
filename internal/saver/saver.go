@@ -1,12 +1,14 @@
 package saver
 
 import (
+	"context"
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/ozoncp/ocp-solution-api/internal/flusher"
 	"github.com/ozoncp/ocp-solution-api/internal/models"
 	"github.com/ozoncp/ocp-solution-api/internal/utils"
-	"sync"
-	"time"
 )
 
 type Saver interface {
@@ -43,7 +45,7 @@ func (s *saver) Close() error {
 	defer s.mtx.Unlock()
 
 	var err error
-	if s.slice, err = s.f.Flush(s.slice); err != nil {
+	if s.slice, err = s.f.FlushSolutions(context.Background(), s.slice); err != nil {
 		err = fmt.Errorf("lost %v solutions: %w", len(s.slice), err)
 	}
 	s.done <- struct{}{}
@@ -75,7 +77,7 @@ func New(capacity uint, flusher flusher.Flusher, forgetAllOnOverflow bool, ticke
 		for {
 			select {
 			case <-ticker.C:
-				s.slice, _ = s.f.Flush(s.slice)
+				s.slice, _ = s.f.FlushSolutions(context.Background(), s.slice)
 			case <-s.done:
 				return
 			}

@@ -69,6 +69,26 @@
         "tags": [
           "OcpSolutionApi"
         ]
+      },
+      "post": {
+        "operationId": "OcpSolutionApi_MultiCreateSolutionV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiMultiCreateSolutionV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "OcpSolutionApi"
+        ]
       }
     },
     "/v1/solutions/{solution_id}": {
@@ -113,6 +133,17 @@
       }
     },
     "apiListSolutionsV1Response": {
+      "type": "object",
+      "properties": {
+        "solutions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiSolution"
+          }
+        }
+      }
+    },
+    "apiMultiCreateSolutionV1Response": {
       "type": "object",
       "properties": {
         "solutions": {

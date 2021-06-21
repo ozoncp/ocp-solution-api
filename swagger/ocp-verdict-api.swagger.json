@@ -190,6 +190,17 @@
         }
       }
     },
+    "apiMultiCreateVerdictV1Response": {
+      "type": "object",
+      "properties": {
+        "verdicts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiVerdict"
+          }
+        }
+      }
+    },
     "apiRemoveVerdictV1Response": {
       "type": "object",
       "properties": {

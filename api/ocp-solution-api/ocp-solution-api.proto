@@ -7,6 +7,12 @@ import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
 option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-solution-api;ocp_solution_api";
 
 service OcpSolutionApi {
+  rpc MultiCreateSolutionV1(MultiCreateSolutionV1Request) returns (MultiCreateSolutionV1Response) {
+    option (google.api.http) = {
+      post: "/v1/solutions"
+    };
+  }
+
   rpc CreateSolutionV1(CreateSolutionV1Request) returns (CreateSolutionV1Response) {
     option (google.api.http) = {
       post: "/v1/solution"
@@ -30,6 +36,14 @@ service OcpSolutionApi {
       delete: "/v1/solutions/{solution_id}"
     };
   }
+}
+
+message MultiCreateSolutionV1Request {
+  repeated uint64 issue_ids = 1 [(validate.rules).repeated.items.uint64.gt = 0];
+}
+
+message MultiCreateSolutionV1Response {
+  repeated Solution solutions = 1;
 }
 
 message CreateSolutionV1Request {

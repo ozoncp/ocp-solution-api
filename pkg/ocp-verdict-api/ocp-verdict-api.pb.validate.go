@@ -33,6 +33,169 @@ var (
 	_ = anypb.Any{}
 )
 
+// Validate checks the field values on MultiCreateVerdictV1Request with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *MultiCreateVerdictV1Request) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	for idx, item := range m.GetSolutionIds() {
+		_, _ = idx, item
+
+		if item <= 0 {
+			return MultiCreateVerdictV1RequestValidationError{
+				field:  fmt.Sprintf("SolutionIds[%v]", idx),
+				reason: "value must be greater than 0",
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// MultiCreateVerdictV1RequestValidationError is the validation error returned
+// by MultiCreateVerdictV1Request.Validate if the designated constraints
+// aren't met.
+type MultiCreateVerdictV1RequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MultiCreateVerdictV1RequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MultiCreateVerdictV1RequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MultiCreateVerdictV1RequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MultiCreateVerdictV1RequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MultiCreateVerdictV1RequestValidationError) ErrorName() string {
+	return "MultiCreateVerdictV1RequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e MultiCreateVerdictV1RequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMultiCreateVerdictV1Request.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MultiCreateVerdictV1RequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MultiCreateVerdictV1RequestValidationError{}
+
+// Validate checks the field values on MultiCreateVerdictV1Response with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *MultiCreateVerdictV1Response) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	for idx, item := range m.GetVerdicts() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return MultiCreateVerdictV1ResponseValidationError{
+					field:  fmt.Sprintf("Verdicts[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// MultiCreateVerdictV1ResponseValidationError is the validation error returned
+// by MultiCreateVerdictV1Response.Validate if the designated constraints
+// aren't met.
+type MultiCreateVerdictV1ResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MultiCreateVerdictV1ResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MultiCreateVerdictV1ResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MultiCreateVerdictV1ResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MultiCreateVerdictV1ResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MultiCreateVerdictV1ResponseValidationError) ErrorName() string {
+	return "MultiCreateVerdictV1ResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e MultiCreateVerdictV1ResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMultiCreateVerdictV1Response.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MultiCreateVerdictV1ResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MultiCreateVerdictV1ResponseValidationError{}
+
 // Validate checks the field values on CreateVerdictV1Request with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, an error is returned.

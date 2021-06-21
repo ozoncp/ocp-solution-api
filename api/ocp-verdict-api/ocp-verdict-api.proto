@@ -7,6 +7,12 @@ import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
 option go_package = "github.com/ozoncp/ocp-solution-api/pkg/ocp-verdict-api;ocp_verdict_api";
 
 service OcpVerdictApi {
+  rpc MultiCreateVerdictV1(MultiCreateVerdictV1Request) returns (MultiCreateVerdictV1Response) {
+    option (google.api.http) = {
+      post: "/v1/verdicts"
+    };
+  }
+
   rpc CreateVerdictV1(CreateVerdictV1Request) returns (CreateVerdictV1Response) {
     option (google.api.http) = {
       post: "/v1/verdicts"
@@ -30,6 +36,14 @@ service OcpVerdictApi {
       delete: "/v1/verdicts/{solution_id}"
     };
   }
+}
+
+message MultiCreateVerdictV1Request {
+  repeated uint64 solution_ids = 1 [(validate.rules).repeated.items.uint64.gt = 0];
+}
+
+message MultiCreateVerdictV1Response {
+  repeated Verdict verdicts = 1;
 }
 
 message CreateVerdictV1Request {

@@ -34,6 +34,42 @@ var _ = descriptor.ForMessage
 var _ = metadata.Join
 
 var (
+	filter_OcpVerdictApi_MultiCreateVerdictV1_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
+func request_OcpVerdictApi_MultiCreateVerdictV1_0(ctx context.Context, marshaler runtime.Marshaler, client OcpVerdictApiClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq MultiCreateVerdictV1Request
+	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OcpVerdictApi_MultiCreateVerdictV1_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.MultiCreateVerdictV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_OcpVerdictApi_MultiCreateVerdictV1_0(ctx context.Context, marshaler runtime.Marshaler, server OcpVerdictApiServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq MultiCreateVerdictV1Request
+	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_OcpVerdictApi_MultiCreateVerdictV1_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := server.MultiCreateVerdictV1(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+var (
 	filter_OcpVerdictApi_CreateVerdictV1_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
 )
 
@@ -237,6 +273,29 @@ func local_request_OcpVerdictApi_RemoveVerdictV1_0(ctx context.Context, marshale
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterOcpVerdictApiHandlerFromEndpoint instead.
 func RegisterOcpVerdictApiHandlerServer(ctx context.Context, mux *runtime.ServeMux, server OcpVerdictApiServer) error {
 
+	mux.Handle("POST", pattern_OcpVerdictApi_MultiCreateVerdictV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_OcpVerdictApi_MultiCreateVerdictV1_0(rctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_OcpVerdictApi_MultiCreateVerdictV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	mux.Handle("POST", pattern_OcpVerdictApi_CreateVerdictV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -370,6 +429,26 @@ func RegisterOcpVerdictApiHandler(ctx context.Context, mux *runtime.ServeMux, co
 // "OcpVerdictApiClient" to call the correct interceptors.
 func RegisterOcpVerdictApiHandlerClient(ctx context.Context, mux *runtime.ServeMux, client OcpVerdictApiClient) error {
 
+	mux.Handle("POST", pattern_OcpVerdictApi_MultiCreateVerdictV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_OcpVerdictApi_MultiCreateVerdictV1_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_OcpVerdictApi_MultiCreateVerdictV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	mux.Handle("POST", pattern_OcpVerdictApi_CreateVerdictV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -454,6 +533,8 @@ func RegisterOcpVerdictApiHandlerClient(ctx context.Context, mux *runtime.ServeM
 }
 
 var (
+	pattern_OcpVerdictApi_MultiCreateVerdictV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "verdicts"}, "", runtime.AssumeColonVerbOpt(true)))
+
 	pattern_OcpVerdictApi_CreateVerdictV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "verdicts"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_OcpVerdictApi_ListVerdictsV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "verdicts"}, "", runtime.AssumeColonVerbOpt(true)))
@@ -464,6 +545,8 @@ var (
 )
 
 var (
+	forward_OcpVerdictApi_MultiCreateVerdictV1_0 = runtime.ForwardResponseMessage
+
 	forward_OcpVerdictApi_CreateVerdictV1_0 = runtime.ForwardResponseMessage
 
 	forward_OcpVerdictApi_ListVerdictsV1_0 = runtime.ForwardResponseMessage

@@ -18,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OcpSolutionApiClient interface {
+	MultiCreateSolutionV1(ctx context.Context, in *MultiCreateSolutionV1Request, opts ...grpc.CallOption) (*MultiCreateSolutionV1Response, error)
 	CreateSolutionV1(ctx context.Context, in *CreateSolutionV1Request, opts ...grpc.CallOption) (*CreateSolutionV1Response, error)
 	ListSolutionsV1(ctx context.Context, in *ListSolutionsV1Request, opts ...grpc.CallOption) (*ListSolutionsV1Response, error)
 	UpdateSolutionV1(ctx context.Context, in *UpdateSolutionV1Request, opts ...grpc.CallOption) (*UpdateSolutionV1Response, error)
@@ -30,6 +31,15 @@ type ocpSolutionApiClient struct {
 
 func NewOcpSolutionApiClient(cc grpc.ClientConnInterface) OcpSolutionApiClient {
 	return &ocpSolutionApiClient{cc}
+}
+
+func (c *ocpSolutionApiClient) MultiCreateSolutionV1(ctx context.Context, in *MultiCreateSolutionV1Request, opts ...grpc.CallOption) (*MultiCreateSolutionV1Response, error) {
+	out := new(MultiCreateSolutionV1Response)
+	err := c.cc.Invoke(ctx, "/ocp.solution.api.OcpSolutionApi/MultiCreateSolutionV1", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *ocpSolutionApiClient) CreateSolutionV1(ctx context.Context, in *CreateSolutionV1Request, opts ...grpc.CallOption) (*CreateSolutionV1Response, error) {
@@ -72,6 +82,7 @@ func (c *ocpSolutionApiClient) RemoveSolutionV1(ctx context.Context, in *RemoveS
 // All implementations must embed UnimplementedOcpSolutionApiServer
 // for forward compatibility
 type OcpSolutionApiServer interface {
+	MultiCreateSolutionV1(context.Context, *MultiCreateSolutionV1Request) (*MultiCreateSolutionV1Response, error)
 	CreateSolutionV1(context.Context, *CreateSolutionV1Request) (*CreateSolutionV1Response, error)
 	ListSolutionsV1(context.Context, *ListSolutionsV1Request) (*ListSolutionsV1Response, error)
 	UpdateSolutionV1(context.Context, *UpdateSolutionV1Request) (*UpdateSolutionV1Response, error)
@@ -83,6 +94,9 @@ type OcpSolutionApiServer interface {
 type UnimplementedOcpSolutionApiServer struct {
 }
 
+func (UnimplementedOcpSolutionApiServer) MultiCreateSolutionV1(context.Context, *MultiCreateSolutionV1Request) (*MultiCreateSolutionV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MultiCreateSolutionV1 not implemented")
+}
 func (UnimplementedOcpSolutionApiServer) CreateSolutionV1(context.Context, *CreateSolutionV1Request) (*CreateSolutionV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSolutionV1 not implemented")
 }
@@ -106,6 +120,24 @@ type UnsafeOcpSolutionApiServer interface {
 
 func RegisterOcpSolutionApiServer(s grpc.ServiceRegistrar, srv OcpSolutionApiServer) {
 	s.RegisterService(&OcpSolutionApi_ServiceDesc, srv)
+}
+
+func _OcpSolutionApi_MultiCreateSolutionV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MultiCreateSolutionV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OcpSolutionApiServer).MultiCreateSolutionV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ocp.solution.api.OcpSolutionApi/MultiCreateSolutionV1",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OcpSolutionApiServer).MultiCreateSolutionV1(ctx, req.(*MultiCreateSolutionV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _OcpSolutionApi_CreateSolutionV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -187,6 +219,10 @@ var OcpSolutionApi_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "ocp.solution.api.OcpSolutionApi",
 	HandlerType: (*OcpSolutionApiServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "MultiCreateSolutionV1",
+			Handler:    _OcpSolutionApi_MultiCreateSolutionV1_Handler,
+		},
 		{
 			MethodName: "CreateSolutionV1",
 			Handler:    _OcpSolutionApi_CreateSolutionV1_Handler,
